@@ -1,0 +1,56 @@
+<ion-menu contentId="home-content" menuId="main-menu">
+
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Menú Principal</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <ion-list>
+      <ion-item button (click)="cerrarSesion()">Cerrar Sesion</ion-item>
+    </ion-list>
+  </ion-content>
+
+</ion-menu>
+
+<div class="ion-page" id="home-content">
+  <ion-header [translucent]="true">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button menu="main-menu"></ion-menu-button>
+      </ion-buttons>
+      <ion-title>RegistrAPP</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content [fullscreen]="true">
+    <ion-text color="dark">
+      <h1 class="titulo">Bienvenido</h1>
+    </ion-text>
+    
+    <br>
+
+    <ion-button expand="block" color="dark" (click)="generarQR()">Generar QR</ion-button>
+    
+    <br><br>
+
+    <qrcode *ngIf="texto" [qrdata]="texto" [width]="400" class="qr"></qrcode>
+
+    <ion-card class="listado">
+      <ion-list>
+        <h2 class="ion-text-center">LISTA DE ALUMNOS</h2>
+        <ion-item *ngFor="let alumno of alumnos">
+          <ion-label>
+            {{ alumno.name }} {{ alumno.lastname }}
+            <p>Estado: 
+              <span [ngClass]="alumno.presente ? 'presente' : 'ausente'">
+                {{ alumno.presente ? 'Presente' : 'Ausente' }}
+              </span>
+            </p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card>    
+  </ion-content>
+</div>

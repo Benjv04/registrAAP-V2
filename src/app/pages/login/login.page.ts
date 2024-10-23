@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router, NavigationExtras } from '@angular/router';
+import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { LoginService } from '../../services/login.service';
 import { Usuario } from '../../models/usuario';
@@ -19,33 +19,29 @@ export class LoginPage {
     private loginService: LoginService
   ) {}
 
-  //validar el login
   async validateLogin() {
-    console.log('Ejecutando validacion login');
-
+    console.log('Ejecutando validación login');
+    
     const user: Usuario | null = this.loginService.validateLogin(this.username, this.password);
 
     if (user) {
-      this.showToastMessage('Login con exito', 'primary');
-      // redigirir por rol
+      await this.loginService.guardarUsuario(user);
+
+      this.showToastMessage('Login con éxito', 'primary');
 
       if (user.rol === 'alumno') {
         user.presente = true; 
-        console.log(`Presencia de ${user.name}: ${user.presente ? 'Presente' : 'Ausente'}`);
         this.loginService.actualizarAsistencia(user.username, user.presente);
-      }
-      
-      if (user.rol === 'profesor') {
-        this.router.navigate(['/home'], { state: { username: user.username } });
-      } else if (user.rol === 'alumno') {
+        console.log(`Presencia de ${user.name}: ${user.presente ? 'Presente' : 'Ausente'}`);
         this.router.navigate(['/home-alumnos'], { state: { username: user.username } });
+      } else if (user.rol === 'profesor') {
+        this.router.navigate(['/home'], { state: { username: user.username } });
       }
 
       this.username = '';
       this.password = '';
-
     } else {
-      this.showToastMessage('Login erroneo', 'danger');
+      this.showToastMessage('Login erróneo', 'danger');
     }
   }
 

@@ -6,7 +6,7 @@
   </ion-header>
   <ion-content>
     <ion-list>
-      <ion-item button (click)="cerrarSesion()">Cerrar Sesion</ion-item>
+      <ion-item button (click)="cerrarSesion()">Cerrar Sesión</ion-item>
     </ion-list>
   </ion-content>
 </ion-menu>
@@ -25,7 +25,7 @@
     <ion-text color="black" *ngIf="mensajeBienvenida">
       <h2 class="ion-text-center">{{ mensajeBienvenida }}</h2>
     </ion-text>
-    
+
     <ion-button expand="block" color="dark" (click)="registrarAsistencia()">Registrar Asistencia</ion-button>
 
     <div *ngIf="fechaHoraRegistro" class="asisRegist">
@@ -46,6 +46,5 @@
         </ion-label>
       </ion-item>
     </ion-list>
-    
   </ion-content>
 </div>

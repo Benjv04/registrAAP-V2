@@ -27,12 +27,28 @@
     </ion-text>
     
     <ion-button expand="block" color="dark" (click)="registrarAsistencia()">Registrar Asistencia</ion-button>
-    
+
     <div *ngIf="fechaHoraRegistro" class="asisRegist">
       <ion-text color="dark">
         <h3>¡Asistencia registrada!</h3>
-        <p>Fecha y Hora: {{fechaHoraRegistro}}</p>
+        <p>Fecha y Hora: {{ fechaHoraRegistro }}</p>
       </ion-text>
     </div>
+
+    <ion-text color="black">
+      <h2 class="ion-text-center">Próximos Feriados en Chile</h2>
+    </ion-text>
+    <ion-list *ngIf="feriados.length > 0">
+      <ion-item *ngFor="let feriado of feriados">
+        <ion-label>
+          <h3>{{ feriado.title }}</h3>
+          <p>{{ feriado.date }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+    <ion-text *ngIf="feriados.length === 0">
+      <p>No hay feriados próximos disponibles.</p>
+    </ion-text>
+
   </ion-content>
 </div>

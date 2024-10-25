@@ -1,0 +1,57 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Administrar Alumnos</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrarSesion()">Cerrar Sesión</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-list>
+    <ion-item *ngFor="let alumno of alumnos">
+      <ion-label>
+        <h2>{{ alumno.name }} {{ alumno.lastname }}</h2>
+        <p>{{ alumno.username }}</p>
+      </ion-label>
+      <ion-buttons slot="end">
+        <ion-button color="primary" (click)="abrirFormulario(alumno)">Editar</ion-button>
+        <ion-button color="danger" (click)="eliminarAlumno(alumno.username)">Eliminar</ion-button>
+      </ion-buttons>
+    </ion-item>
+  </ion-list>
+
+  <ion-button expand="block" (click)="abrirFormulario()">Agregar Alumno</ion-button>
+
+  <ion-modal [isOpen]="mostrarFormulario" (ionModalDidDismiss)="cerrarFormulario()">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ alumnoSeleccionado ? 'Editar Alumno' : 'Agregar Alumno' }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="cerrarFormulario()">Cerrar</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+  
+      <ion-content>
+        <ion-item>
+          <ion-input [(ngModel)]="nuevoAlumno.username" placeholder="Usuario"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input [(ngModel)]="nuevoAlumno.password" placeholder="Contraseña" type="password"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input [(ngModel)]="nuevoAlumno.name" placeholder="Nombre"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input [(ngModel)]="nuevoAlumno.lastname" placeholder="Apellido"></ion-input>
+        </ion-item>
+  
+        <ion-button expand="block" (click)="guardarAlumno()">
+          {{ alumnoSeleccionado ? 'Guardar Cambios' : 'Agregar Alumno' }}
+        </ion-button>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

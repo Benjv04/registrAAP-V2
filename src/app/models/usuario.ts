@@ -3,10 +3,10 @@ export class Usuario {
     password: string;
     name: string;
     lastname: string;
-    rol: 'profesor' | 'alumno'; 
+    rol: 'admin' | 'alumno' | 'profesor'; 
     presente: boolean;
   
-    constructor(username: string, password: string, rol: 'profesor' | 'alumno', name: string = '', lastname: string = '',presente:boolean = false) {
+    constructor(username: string, password: string, rol: 'admin' | 'alumno'| 'profesor', name: string = '', lastname: string = '',presente:boolean = false) {
       this.username = username;
       this.password = password;
       this.rol = rol;

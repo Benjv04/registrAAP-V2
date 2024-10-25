@@ -34,9 +34,11 @@ export class LoginPage {
         this.loginService.actualizarAsistencia(user.username, user.presente);
         console.log(`Presencia de ${user.name}: ${user.presente ? 'Presente' : 'Ausente'}`);
         this.router.navigate(['/home-alumnos'], { state: { username: user.username } });
+      } else if (user.rol === 'admin') {
+        this.router.navigate(['/admin'], { state: { username: user.username } });
       } else if (user.rol === 'profesor') {
         this.router.navigate(['/home'], { state: { username: user.username } });
-      }
+      } 
 
       this.username = '';
       this.password = '';

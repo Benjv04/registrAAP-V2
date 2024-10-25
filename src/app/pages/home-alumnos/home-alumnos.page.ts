@@ -24,6 +24,16 @@ export class HomeAlumnosPage implements OnInit {
   registrarAsistencia() {
     this.fechaHoraRegistro = new Date().toLocaleString();
     console.log('Asistencia registrada en:', this.fechaHoraRegistro);
+  
+    setTimeout(() => {
+      const elem = document.querySelector('.asisRegist');
+      if (elem) {
+        elem.classList.add('hidden');
+      }
+      setTimeout(() => {
+        this.fechaHoraRegistro = null;
+      }, 500);
+    }, 3000);
   }
 
   cerrarSesion() {

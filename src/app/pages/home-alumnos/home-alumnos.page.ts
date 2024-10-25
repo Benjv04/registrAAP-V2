@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
+import { LoginService } from '../../services/login.service';
+import { Usuario } from '../../models/usuario';
 
 interface Feriado {
   date: string;
@@ -16,14 +18,26 @@ interface Feriado {
   styleUrls: ['./home-alumnos.page.scss'],
 })
 export class HomeAlumnosPage implements OnInit {
+  usuario: Usuario | null= null;
   fechaHoraRegistro: string | null = null;
   mensajeBienvenida: string = '';
   feriados: any[] = [];
 
-  constructor(private router: Router, private apiService: ApiService) {}
+  constructor(private router: Router, private apiService: ApiService,
+    private loginService: LoginService
+  ) {}
 
-  ngOnInit() {
-    this.mensajeBienvenida = 'Bienvenido al registro de asistencia';
+  async ngOnInit() {
+    const isAuthenticated = await this.loginService.estaAutenticado();
+    if (!isAuthenticated) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    this.usuario = await this.loginService.obtenerUsuario();
+    console.log('Usuario autenticado:', this.usuario);
+
+    this.mensajeBienvenida = `Bienvenido, ${this.usuario?.name || 'alumno'}!`;
     console.log(this.mensajeBienvenida);
 
     this.obtenerFeriados();
@@ -44,8 +58,9 @@ export class HomeAlumnosPage implements OnInit {
     }, 3000);
   }
 
-  cerrarSesion() {
-    this.router.navigate(['/login']);
+  async cerrarSesion() {
+    await this.loginService.cerrarSesion(); 
+    this.router.navigate(['/login']); 
   }
 
   obtenerFeriados() {

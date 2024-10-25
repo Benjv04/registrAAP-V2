@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
+import { LoginService } from '../../services/login.service';
+import { Usuario } from '../../models/usuario';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { AlertController } from '@ionic/angular';
+
 
 interface Feriado {
   date: string;
@@ -16,36 +21,57 @@ interface Feriado {
   styleUrls: ['./home-alumnos.page.scss'],
 })
 export class HomeAlumnosPage implements OnInit {
+  usuario: Usuario | null= null;
   fechaHoraRegistro: string | null = null;
   mensajeBienvenida: string = '';
   feriados: any[] = [];
+  foto: string | null = null;
 
-  constructor(private router: Router, private apiService: ApiService) {}
+  constructor(private router: Router, private apiService: ApiService,
+    private loginService: LoginService,
+    private alertController: AlertController
+  ) {}
 
-  ngOnInit() {
-    this.mensajeBienvenida = 'Bienvenido al registro de asistencia';
+  async ngOnInit() {
+    const isAuthenticated = await this.loginService.estaAutenticado();
+    if (!isAuthenticated) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    this.usuario = await this.loginService.obtenerUsuario();
+    console.log('Usuario autenticado:', this.usuario);
+
+    this.mensajeBienvenida = `Bienvenido, ${this.usuario?.name || 'alumno'}!`;
     console.log(this.mensajeBienvenida);
 
     this.obtenerFeriados();
   }
 
-  registrarAsistencia() {
-    this.fechaHoraRegistro = new Date().toLocaleString();
-    console.log('Asistencia registrada en:', this.fechaHoraRegistro);
+  async registrarAsistencia() {
+    try {
+      await this.abrirCamara();
   
-    setTimeout(() => {
-      const elem = document.querySelector('.asisRegist');
-      if (elem) {
-        elem.classList.add('hidden');
-      }
+      this.fechaHoraRegistro = new Date().toLocaleString();
+      console.log('Asistencia registrada en:', this.fechaHoraRegistro);
+  
       setTimeout(() => {
-        this.fechaHoraRegistro = null;
-      }, 500);
-    }, 3000);
+        const elem = document.querySelector('.asisRegist');
+        if (elem) {
+          elem.classList.add('hidden');
+        }
+        setTimeout(() => {
+          this.fechaHoraRegistro = null;
+        }, 500);
+      }, 3000);
+    } catch (error) {
+      console.error('Error al registrar asistencia:', error);
+    }
   }
 
-  cerrarSesion() {
-    this.router.navigate(['/login']);
+  async cerrarSesion() {
+    await this.loginService.cerrarSesion(); 
+    this.router.navigate(['/login']); 
   }
 
   obtenerFeriados() {
@@ -72,4 +98,41 @@ export class HomeAlumnosPage implements OnInit {
       }
     );
   }
+
+  async abrirCamara() {
+    try {
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: false,
+        resultType: CameraResultType.Base64,
+        source: CameraSource.Camera,
+      });
+  
+      this.foto = `data:image/jpeg;base64,${image.base64String}`;
+      console.log('Foto capturada:', this.foto);
+    } catch (error: any) {  
+      console.error('Error al abrir la cámara', error);
+      if (error.message && error.message.includes('denied')) {
+        this.mostrarAlertaPermisos();
+      }
+    }
+  }
+  
+
+  async mostrarAlertaPermisos() {
+    const alert = await this.alertController.create({
+      header: 'Permiso Requerido',
+      message: 'Para utilizar la cámara, necesitas permitir el acceso en la configuración.',
+      buttons: [
+        {
+          text: 'Entendido',
+          role: 'cancel',
+        },
+      ],
+    });
+  
+    await alert.present();
+  }
+  
+  
 }

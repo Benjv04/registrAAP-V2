@@ -1,5 +1,7 @@
+import { AuthGuard } from './auth.guard';
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { audit } from 'rxjs';
 
 const routes: Routes = [
   {
@@ -17,12 +19,20 @@ const routes: Routes = [
   },
   {
     path: 'home', 
-    loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule)
+    loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'home-alumnos',
-    loadChildren: () => import('./pages/home-alumnos/home-alumnos.module').then( m => m.HomeAlumnosPageModule)
+    loadChildren: () => import('./pages/home-alumnos/home-alumnos.module').then( m => m.HomeAlumnosPageModule),
+    canActivate: [AuthGuard]
   },
+  {
+    path: 'admin',
+    loadChildren: () => import('./pages/admin/admin.module').then( m => m.AdminPageModule),
+    canActivate: [AuthGuard]
+  },
+
 ];
 
 @NgModule({

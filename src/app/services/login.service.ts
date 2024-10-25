@@ -27,10 +27,11 @@ export class LoginService {
   async init() {
     const storage = await this.storage.create();
     this._storage = storage;
-  
-    console.log('Sobrescribiendo usuarios con la lista inicial...');
-    await this.guardarUsuarios(); 
-    this.users = [...this.users]; 
+
+    const storedUsers = await this._storage?.get('usuarios');
+    if (storedUsers) {
+      this.users = storedUsers; 
+    }
   }
   
 
@@ -133,4 +134,22 @@ export class LoginService {
     console.log('Usuario no encontrado:', username);
     return false;
   }
+
+  async resetUsuarios() {
+    console.log('Restableciendo usuarios a los valores predeterminados...');
+    
+    this.users = [
+      new Usuario('admin', '12345', 'admin', 'Admin', 'User'),
+      new Usuario('profesor1', '12345', 'profesor', 'Ivan', 'Fernandez'),
+      new Usuario('alumno1', '12345', 'alumno', 'Diego', 'Fuentes', false),
+      new Usuario('alumno2', '12345', 'alumno', 'Benjamin', 'Gonzalez', false),
+      new Usuario('alumno3', '12345', 'alumno', 'Alumno', '3', false),
+      new Usuario('alumno4', '12345', 'alumno', 'Alumno', '4', false),
+      new Usuario('admin1', '12345', 'admin', 'Admin', '1', false),
+    ];
+  
+    await this.guardarUsuarios();
+    console.log('Usuarios restablecidos con éxito.');
+  }
+  
 }

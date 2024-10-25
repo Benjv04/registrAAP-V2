@@ -16,6 +16,7 @@ export class LoginService {
     new Usuario('alumno2', '12345', 'alumno', 'Benjamin', 'Gonzalez', false),
     new Usuario('alumno3', '12345', 'alumno', 'Alumno', '3', false),
     new Usuario('alumno4', '12345', 'alumno', 'Alumno', '4', false),
+    new Usuario('admin1', '12345', 'admin', 'Admin', '1', false),
   ];
 
   constructor(private storage: Storage) {
@@ -26,12 +27,12 @@ export class LoginService {
   async init() {
     const storage = await this.storage.create();
     this._storage = storage;
-
-    const storedUsers = await this._storage?.get('usuarios');
-    if (storedUsers) {
-      this.users = storedUsers; 
-    }
+  
+    console.log('Sobrescribiendo usuarios con la lista inicial...');
+    await this.guardarUsuarios(); 
+    this.users = [...this.users]; 
   }
+  
 
   // guardar lista actualizada
   private async guardarUsuarios() {
@@ -47,6 +48,7 @@ export class LoginService {
   async agregarAlumno(alumno: Usuario) {
     this.users.push(alumno);
     await this.guardarUsuarios();
+    console.log('Alumno agregado:', alumno);
   }
 
   // editar un alumno existente
@@ -55,6 +57,7 @@ export class LoginService {
     if (index !== -1) {
       this.users[index] = alumno;
       await this.guardarUsuarios();
+      console.log('Alumno editado:', alumno);
     }
   }
 
@@ -62,12 +65,19 @@ export class LoginService {
   async eliminarAlumno(username: string) {
     this.users = this.users.filter((user) => user.username !== username);
     await this.guardarUsuarios(); 
+    console.log('Alumno eliminado:', username);
   }
 
   //validar login
   validateLogin(username: string, password: string): Usuario | null {
     const found = this.users.find((user) => user.username === username);
-    return found && found.password === password ? found : null;
+    if (found && found.password === password) {
+      this.guardarUsuario(found);
+      console.log('Login exitoso:', found);
+      return found;
+    }
+    console.log('Usuario o contraseña incorrectos');
+    return null;
   }
 
   async guardarUsuario(user: Usuario) {

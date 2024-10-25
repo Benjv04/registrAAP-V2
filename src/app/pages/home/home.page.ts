@@ -15,7 +15,12 @@ export class HomePage implements OnInit {
 
   constructor(private router: Router, private loginService: LoginService) {}
 
-  ngOnInit() {
+  async ngOnInit() {
+    const isAuthenticated = await this.loginService.estaAutenticado();
+    if (!isAuthenticated) {
+      this.router.navigate(['/login']);
+      return;
+    }
     this.alumnos = this.loginService.getAlumnos();
   }
 
@@ -24,9 +29,11 @@ export class HomePage implements OnInit {
     console.log('QR generado:', this.texto);
   }
 
-  cerrarSesion() {
+  async cerrarSesion() {
+    await this.loginService.cerrarSesion();  
     this.router.navigate(['/login']); 
   }
+  
 
   cambiarPresencia(alumno: Usuario) {
     alumno.presente = !alumno.presente;

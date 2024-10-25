@@ -2,6 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 
+interface Feriado {
+  date: string;
+  title: string;
+  type: string;
+  inalienable: boolean;
+  extra: string;
+}
+
 @Component({
   selector: 'app-home-alumnos',
   templateUrl: './home-alumnos.page.html',
@@ -44,7 +52,15 @@ export class HomeAlumnosPage implements OnInit {
     this.apiService.getFeriados().subscribe(
       (response) => {
         if (response.status === 'success' && response.data) {
-          this.feriados = response.data.slice(0, 5);
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+
+          this.feriados = response.data
+            .filter((feriado: Feriado) => {
+              const feriadoDate = new Date(feriado.date); 
+              return feriadoDate >= today;
+            })
+            .slice(0, 5);
         } else {
           console.log('No se encontraron feriados');
           this.feriados = [];

@@ -36,8 +36,10 @@ export class LoginPage {
         this.router.navigate(['/home-alumnos'], { state: { username: user.username } });
       } else if (user.rol === 'admin') {
         this.router.navigate(['/admin'], { state: { username: user.username } });
+        console.log('redirigiendo a admin');
       } else if (user.rol === 'profesor') {
         this.router.navigate(['/home'], { state: { username: user.username } });
+        console.log('redirigiendo a profesor');
       } 
 
       this.username = '';

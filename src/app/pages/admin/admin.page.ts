@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LoginService } from '../../services/login.service';
 import { Usuario } from '../../models/usuario';
 import { Router } from '@angular/router';
+import { AlertController, ToastController } from '@ionic/angular';
 
 
 @Component({
@@ -17,7 +18,9 @@ export class AdminPage implements OnInit {
   //formulario
   nuevoAlumno: Usuario = new Usuario('', '', 'alumno', '', '');
 
-  constructor(private router: Router,private loginService: LoginService) {}
+  constructor(private router: Router,private loginService: LoginService,
+    private toastController: ToastController, private alertController: AlertController, 
+  ) {}
 
   ngOnInit() {
     this.cargarAlumnos();
@@ -71,5 +74,53 @@ export class AdminPage implements OnInit {
   async cerrarSesion() {
     await this.loginService.cerrarSesion();  
     this.router.navigate(['/login']); 
+  }
+
+  async confirmarRestablecerUsuarios() {
+    const alert = await this.alertController.create({
+      header: 'Confirmar reset',
+      message: 'Ingrese su contraseña para confirmar.',
+      inputs: [
+        {
+          name: 'password',
+          type: 'password',
+          placeholder: 'Contraseña',
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Confirmar',
+          handler: async (data) => {
+            const adminPassword = '12345'; 
+            if (data.password === adminPassword) {
+              await this.restablecerUsuarios();
+              this.showToast('Usuarios restablecidos con exito', 'success');
+            } else {
+              this.showToast('Contraseña incorrecta', 'danger');
+            }
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  async restablecerUsuarios() {
+    await this.loginService.resetUsuarios();
+    this.cargarAlumnos();
+  }
+  async showToast(message: string, color: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 3000,
+      position: 'bottom',
+      color: color,
+    });
+    await toast.present();
   }
 }

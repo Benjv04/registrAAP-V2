@@ -17,15 +17,15 @@ export class AuthGuard implements CanActivate{
     state: RouterStateSnapshot
   ): Promise<boolean> {
 
-    const isAuthenticated = await this.loginService.estaAutenticado();
+    const estaAutenticado = await this.loginService.estaAutenticado();
 
     /*mensaje de error en caso de no estar autenticado*/
-    if (!isAuthenticated){
+    if (!estaAutenticado){
       this.presentToast('ERROR ********Debes iniciar sesión para acceder a esta página.******', 'danger');
       this.router.navigate(['./login']);
     } 
     
-    return isAuthenticated;
+    return estaAutenticado;
   }
 
   /*error*/

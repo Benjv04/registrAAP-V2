@@ -8,18 +8,21 @@ ion-toolbar{
   background-color: rgba(221, 43, 75, 0.914);
 }
 
-.asisRegist{
-  --background:transparent;
+.asisRegist {
   display: flex;
-  flex-direction: column; 
-  justify-content: center; 
-  align-items: center; 
-  position: absolute; 
-  left: 16%; 
-  transform: translateY(50%); 
-  text-align: center; 
-  padding: 3px; 
-  background-color: #cfcfcf; 
-  border-radius: 10px; 
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 3px;
+  background-color: #cfcfcf;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.asisRegist.hidden {
+  opacity: 0;
 }

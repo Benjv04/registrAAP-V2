@@ -36,7 +36,7 @@
     </div>
 
     <ion-text color="black">
-      <h2 class="ion-text-center">Próximos Feriados en Chile</h2>
+      <h2 class="ion-text-center">Próximos Feriados</h2>
     </ion-text>
     <ion-list *ngIf="feriados.length > 0">
       <ion-item *ngFor="let feriado of feriados">
@@ -46,9 +46,6 @@
         </ion-label>
       </ion-item>
     </ion-list>
-    <ion-text *ngIf="feriados.length === 0">
-      <p>No hay feriados próximos disponibles.</p>
-    </ion-text>
-
+    
   </ion-content>
 </div>

@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { CanActivate,ActivatedRouteSnapshot, RouterStateSnapshot, Router, GuardResult, MaybeAsync  } from '@angular/router';
 import { LoginService } from './services/login.service';
+import { ToastController } from '@ionic/angular';
 
 @Injectable ({
   providedIn: 'root'
 })
 
 export class AuthGuard implements CanActivate{
-  constructor(private loginService: LoginService, private router: Router){}
+  constructor(private loginService: LoginService, private router: Router, private toastController: ToastController){}
 
 
   /*Metodo para ver si permite activar la ruta*/
@@ -17,12 +18,25 @@ export class AuthGuard implements CanActivate{
   ): Promise<boolean> {
 
     const isAuthenticated = await this.loginService.estaAutenticado();
+
+    /*mensaje de error en caso de no estar autenticado*/
     if (!isAuthenticated){
-      this.router.navigate(['/src/app/pages/login']);
-      return false;
+      this.presentToast('ERROR ********Debes iniciar sesión para acceder a esta página.******', 'danger');
+      this.router.navigate(['./login']);
     } 
     
-    return true;
+    return isAuthenticated;
+  }
+
+  /*error*/
+  async presentToast(message: string, color: string){
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 5000,
+      position: 'bottom',
+      color: color
+    });
+    toast.present();
   }
 
 }

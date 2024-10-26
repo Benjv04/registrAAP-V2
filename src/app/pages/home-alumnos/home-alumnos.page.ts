@@ -111,7 +111,7 @@ export class HomeAlumnosPage implements OnInit {
       this.foto = `data:image/jpeg;base64,${image.base64String}`;
       console.log('Foto capturada:', this.foto);
     } catch (error: any) {  
-      console.error('Error al abrir la cámara', error);
+      console.error('Error al abrir la camara', error);
       if (error.message && error.message.includes('denied')) {
         this.mostrarAlertaPermisos();
       }
@@ -122,7 +122,7 @@ export class HomeAlumnosPage implements OnInit {
   async mostrarAlertaPermisos() {
     const alert = await this.alertController.create({
       header: 'Permiso Requerido',
-      message: 'Para utilizar la cámara, necesitas permitir el acceso en la configuración.',
+      message: 'Para utilizar la camara, necesitas permitir el acceso en la configuracion.',
       buttons: [
         {
           text: 'Entendido',

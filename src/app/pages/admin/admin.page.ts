@@ -69,7 +69,7 @@ export class AdminPage implements OnInit {
   //cerrar formulario
   cerrarFormulario() {
     this.mostrarFormulario = false;
-    this.nuevoAlumno = new Usuario('', '', 'alumno', '', ''); // Reiniciar el modelo
+    this.nuevoAlumno = new Usuario('', '', 'alumno', '', '');
   }
   async cerrarSesion() {
     await this.loginService.cerrarSesion();  

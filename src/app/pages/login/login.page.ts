@@ -27,7 +27,7 @@ export class LoginPage {
     if (user) {
       await this.loginService.guardarUsuario(user);
 
-      this.showToastMessage('Login con éxito', 'primary');
+      this.showToastMessage('Login con exito', 'primary');
 
       if (user.rol === 'alumno') {
         user.presente = true; 
@@ -45,7 +45,7 @@ export class LoginPage {
       this.username = '';
       this.password = '';
     } else {
-      this.showToastMessage('Login erróneo', 'danger');
+      this.showToastMessage('¡Login erroneo!', 'danger');
     }
   }
 

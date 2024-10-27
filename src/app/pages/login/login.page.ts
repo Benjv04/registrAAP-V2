@@ -28,23 +28,30 @@ export class LoginPage {
       await this.loginService.guardarUsuario(user);
 
       this.showToastMessage('Login con exito', 'primary');
-
+      //redirigir segun rol
+      //alumno
       if (user.rol === 'alumno') {
         user.presente = true; 
         this.loginService.actualizarAsistencia(user.username, user.presente);
         console.log(`Presencia de ${user.name}: ${user.presente ? 'Presente' : 'Ausente'}`);
         this.router.navigate(['/home-alumnos'], { state: { username: user.username } });
-      } else if (user.rol === 'admin') {
+      } 
+      //admin
+      else if (user.rol === 'admin') {
         this.router.navigate(['/admin'], { state: { username: user.username } });
         console.log('redirigiendo a admin');
-      } else if (user.rol === 'profesor') {
+      } 
+      //profesor
+      else if (user.rol === 'profesor') {
         this.router.navigate(['/home'], { state: { username: user.username } });
         console.log('redirigiendo a profesor');
       } 
 
       this.username = '';
       this.password = '';
-    } else {
+    } 
+    //mensaje de error
+    else {
       this.showToastMessage('¡Login erroneo!', 'danger');
     }
   }

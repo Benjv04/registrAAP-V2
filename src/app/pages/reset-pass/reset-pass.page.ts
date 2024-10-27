@@ -10,7 +10,9 @@ import { Router } from '@angular/router';
 })
 export class ResetPassPage {
   mostrarcontrasena: boolean = false;
+  mostrarCodigo: boolean = false;
   email: string = '';
+  codigo: string = ''
   password: string = '';
   confirmarcontrasena: string = '';
 
@@ -23,10 +25,23 @@ export class ResetPassPage {
   verificacion() {
     console.log('Verificando usuario:', this.email);
     if (this.loginService.userExists(this.email)) {
-      this.mostrarcontrasena = true;
-      this.presentToast('Usuario encontrado. Por favor, ingrese su nueva contraseña.','success');
+      this.mostrarCodigo = true;
+      this.presentToast('Usuario encontrado. Por favor, ingrese codigo de verificacion.','success');
     } else {
       this.presentToast('Usuario no encontrado. Verifique el nombre de usuario.','danger');
+    }
+  }
+
+  verificarCodigo(){
+    if (this.codigo.trim() !== '') {  
+      this.mostrarCodigo = false;
+      this.mostrarcontrasena = true;
+      this.presentToast('Código verificado. Ingresa tu nueva contraseña.', 'success');
+
+      this.email= ''; /* para k se borre el usuario antes agregado*/
+
+    } else {
+      this.presentToast('Código incorrecto. Verifica e inténtalo de nuevo.', 'danger');
     }
   }
 

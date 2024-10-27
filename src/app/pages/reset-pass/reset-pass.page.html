@@ -6,11 +6,19 @@
     </div>
 
     <div class="input-container">
+      <!----verificar el usuario pa ver si esta-->
       <ion-item class="input">
         <ion-input [(ngModel)]="email" placeholder="Ingresa tu usuario"></ion-input>
         <ion-icon name="person-outline" slot="end"></ion-icon>
       </ion-item>
 
+      <!---Codigoverificacion-->
+      <ion-item *ngIf="mostrarCodigo" class="input">
+        <ion-input [(ngModel)]="codigo" placeholder="Ingresa el código de verificación"></ion-input>
+        <ion-icon name="key-outline" slot="end"></ion-icon>
+      </ion-item>
+
+      <!----cambio contraseñaaa-->
       <ng-container *ngIf="mostrarcontrasena">
         <ion-item class="input">
           <ion-input [(ngModel)]="password" type="password" placeholder="Nueva contraseña"></ion-input>
@@ -22,8 +30,9 @@
         </ion-item>
       </ng-container>
 
+      <!-------boton-->
       <div class="boton">
-        <ion-button (click)="mostrarcontrasena ? onSubmit() : verificacion()">
+        <ion-button (click)="mostrarcontrasena ? onSubmit() : mostrarCodigo ? verificarCodigo() : verificacion()">
           {{ mostrarcontrasena ? 'Restablecer contraseña' : 'Continuar' }}
         </ion-button>
       </div>

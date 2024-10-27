@@ -37,7 +37,7 @@ export class ResetPassPage {
     }
 
     if (this.loginService.cambiarcontraseña(this.email, this.password)) {
-      this.presentToast('Contraseña cambiada con éxito','success');
+      this.presentToast('Contraseña cambiada con exito','success');
       this.router.navigate(['/login']);
     } else {
       this.presentToast('Error al cambiar la contraseña','danger');
@@ -53,8 +53,4 @@ export class ResetPassPage {
     });
     toast.present();
   }
-
-  /*goToLogin() {
-    this.router.navigate(['/login']);
-  }    NO ME SALIO EL ROUTER EN EL PAGE RECUERDENME PREGUNTARLE AL PROFE*/
 }

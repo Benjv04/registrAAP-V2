@@ -11,21 +11,21 @@ export class AuthGuard implements CanActivate{
   constructor(private loginService: LoginService, private router: Router, private toastController: ToastController){}
 
 
-  /*Metodo para ver si permite activar la ruta*/
+  /*metodo para ver si permite activar la ruta*/
   async canActivate(
     route: ActivatedRouteSnapshot, 
     state: RouterStateSnapshot
   ): Promise<boolean> {
 
-    const isAuthenticated = await this.loginService.estaAutenticado();
+    const estaAutenticado = await this.loginService.estaAutenticado();
 
     /*mensaje de error en caso de no estar autenticado*/
-    if (!isAuthenticated){
-      this.presentToast('ERROR ********Debes iniciar sesión para acceder a esta página.******', 'danger');
+    if (!estaAutenticado){
+      this.presentToast('ERROR   ********Debes iniciar sesion para acceder a esta pagina.******', 'danger');
       this.router.navigate(['./login']);
     } 
     
-    return isAuthenticated;
+    return estaAutenticado;
   }
 
   /*error*/

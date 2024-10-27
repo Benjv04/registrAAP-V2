@@ -16,6 +16,7 @@ export class LoginService {
     new Usuario('alumno2', '12345', 'alumno', 'Benjamin', 'Gonzalez', false),
     new Usuario('alumno3', '12345', 'alumno', 'Alumno', '3', false),
     new Usuario('alumno4', '12345', 'alumno', 'Alumno', '4', false),
+    new Usuario('admin1', '12345', 'admin', 'Admin', '1', false),
   ];
 
   constructor(private storage: Storage) {
@@ -32,6 +33,7 @@ export class LoginService {
       this.users = storedUsers; 
     }
   }
+  
 
   // guardar lista actualizada
   private async guardarUsuarios() {
@@ -47,6 +49,7 @@ export class LoginService {
   async agregarAlumno(alumno: Usuario) {
     this.users.push(alumno);
     await this.guardarUsuarios();
+    console.log('alumno agregado:', alumno);
   }
 
   // editar un alumno existente
@@ -55,6 +58,7 @@ export class LoginService {
     if (index !== -1) {
       this.users[index] = alumno;
       await this.guardarUsuarios();
+      console.log('alumno editado:', alumno);
     }
   }
 
@@ -62,12 +66,19 @@ export class LoginService {
   async eliminarAlumno(username: string) {
     this.users = this.users.filter((user) => user.username !== username);
     await this.guardarUsuarios(); 
+    console.log('alumno eliminado:', username);
   }
 
   //validar login
   validateLogin(username: string, password: string): Usuario | null {
     const found = this.users.find((user) => user.username === username);
-    return found && found.password === password ? found : null;
+    if (found && found.password === password) {
+      this.guardarUsuario(found);
+      console.log('login exitoso:', found);
+      return found;
+    }
+    console.log('usuario o contraseña incorrectos');
+    return null;
   }
 
   async guardarUsuario(user: Usuario) {
@@ -99,7 +110,7 @@ export class LoginService {
       alumno.presente = presente;
       console.log(`Presencia de ${username} actualizada a ${presente}`);
     } else {
-      console.log('Alumno no encontrado');
+      console.log('alumno no encontrado');
     }
   }
   userExists(username: string): boolean {
@@ -109,18 +120,36 @@ export class LoginService {
   // cambiar contraseña usuario
   cambiarcontraseña(username: string, newPassword: string): boolean {
     if (!newPassword) {
-      console.log('La nueva contraseña no puede estar vacia.');
+      console.log('la nueva contraseña no puede estar vacia.');
       return false;
     }
   
     const userIndex = this.users.findIndex(user => user.username === username);
     if (userIndex !== -1) {
       this.users[userIndex].password = newPassword;
-      console.log('Contraseña cambiada con exito para:', username);
+      console.log('contraseña cambiada con exito para:', username);
       return true;
     }
   
-    console.log('Usuario no encontrado:', username);
+    console.log('usuario no encontrado:', username);
     return false;
   }
+
+  async resetUsuarios() {
+    console.log('reset de usuarios');
+    
+    this.users = [
+      new Usuario('admin', '12345', 'admin', 'Admin', 'User'),
+      new Usuario('profesor1', '12345', 'profesor', 'Ivan', 'Fernandez'),
+      new Usuario('alumno1', '12345', 'alumno', 'Diego', 'Fuentes', false),
+      new Usuario('alumno2', '12345', 'alumno', 'Benjamin', 'Gonzalez', false),
+      new Usuario('alumno3', '12345', 'alumno', 'Alumno', '3', false),
+      new Usuario('alumno4', '12345', 'alumno', 'Alumno', '4', false),
+      new Usuario('admin1', '12345', 'admin', 'Admin', '1', false),
+    ];
+  
+    await this.guardarUsuarios();
+    console.log('usuarios restablecidos');
+  }
+  
 }

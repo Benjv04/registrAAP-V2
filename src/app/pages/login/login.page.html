@@ -8,26 +8,35 @@
   <ion-img src="assets/img/aula1.avif"></ion-img>
   <div class="login">
     <ion-title class="titulo" size="medium">RegistrAPP</ion-title>
+
+    <!-- Campo de entrada para el usuario -->
     <ion-item>
       <ion-input label="Ingrese su usuario" label-placement="floating" fill="inline" placeholder="Usuario" [(ngModel)]="username"></ion-input>
       <ion-icon name="person-outline" slot="end"></ion-icon>
     </ion-item>
 
+    <!-- Campo de entrada para la contraseña -->
     <ion-item>
-    <ion-input label="Ingrese su contraseña" label-placement="floating" fill="inline" placeholder="Contraseña" type="password"[(ngModel)]="password"></ion-input>
-    <ion-icon name="lock-closed-outline" slot="end"></ion-icon>
+      <ion-input label="Ingrese su contraseña" label-placement="floating" fill="inline" placeholder="Contraseña" type="password" [(ngModel)]="password"></ion-input>
+      <ion-icon name="lock-closed-outline" slot="end"></ion-icon>
     </ion-item>
 
+    <!-- Botón de ingreso -->
     <ion-button fill="intline" (click)="validateLogin()">Ingresar</ion-button>
 
+    <!-- Links para registrarse o recuperar contraseña -->
     <div class="links">
       <ion-text class="registrar">¿No tienes cuenta?, Registrate</ion-text>
       <br>
       <ion-text>
-        <a class="recuperar" routerLink="/reset-pass">
-          Recuperar contraseña
-        </a>
+        <a class="recuperar" routerLink="/reset-pass">Recuperar contraseña</a>
       </ion-text>
     </div>
   </div>
+
+  <!-- Loading -->
+  <ion-loading
+    *ngIf="isLoading" message="Cargando..." spinner="crescent" [duration]="2000">
+  </ion-loading>
+
 </ion-content>

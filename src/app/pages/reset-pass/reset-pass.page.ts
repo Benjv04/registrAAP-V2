@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { LoginService } from '../../services/login.service'; 
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-reset-pass',
@@ -19,7 +20,8 @@ export class ResetPassPage {
   constructor(
     private loginService: LoginService,
     private toastController: ToastController,
-    private router: Router
+    private router: Router,
+    private alertController: AlertController    
   ) {}
 
   verificacion() {
@@ -44,6 +46,35 @@ export class ResetPassPage {
       this.presentToast('Código incorrecto. Verifica e inténtalo de nuevo.', 'danger');
     }
   }
+
+  async confirmarRestablecimiento() {
+    const alert = await this.alertController.create({
+      header: 'Confirmar',
+      message: 'Estas seguro de que deseas restablecer la contraseña?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Confirmar',
+          handler: () => {
+            this.onSubmit(); 
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }  
+
+  async ngOnInit() {
+    const isAuthenticated = await this.loginService.estaAutenticado();
+    if (!isAuthenticated) {
+      this.router.navigate(['/login']);
+      return;
+    }
+  } 
 
   onSubmit() {
     if (this.password !== this.confirmarcontrasena) {

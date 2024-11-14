@@ -26,3 +26,32 @@ ion-toolbar{
 .asisRegist.hidden {
   opacity: 0;
 }
+
+ion-content{
+  --background: transparent;
+  background-color: rgba(59, 141, 57, 0.914);
+}
+
+.feriados{
+  margin-top: 30px;
+  --background: transparent;
+  background-color: rgba(221, 43, 75, 0.914);
+  border: 0.5px solid black;
+}
+
+.cerrarsesion ion-item{
+  --background: transparent;
+  background-color: rgba(59, 141, 57, 0.914);
+  height: 100%;
+  margin: 0;
+}
+
+ion-menu ion-list {
+  --background: rgba(59, 141, 57, 0.914);
+  margin: 0;
+  padding: 0;
+}
+
+ion-icon{
+  color: black;
+}

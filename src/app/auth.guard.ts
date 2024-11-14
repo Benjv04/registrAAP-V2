@@ -21,22 +21,40 @@ export class AuthGuard implements CanActivate{
 
     /*mensaje de error en caso de no estar autenticado*/
     if (!estaAutenticado){
-      this.presentToast('ERROR   ********Debes iniciar sesion para acceder a esta pagina.******', 'danger');
+      this.presentToast('inicia sesion para acceder a esta pagina', 'danger','warning');
       this.router.navigate(['./login']);
     } 
     
     return estaAutenticado;
   }
 
-  /*error*/
-  async presentToast(message: string, color: string){
+   /* Mostrar mensaje de error personalizado con icono */
+   async presentToast(message: string, color: string, type: 'warning' | 'info' | 'error' = 'info') {
+    let icon = '';
+
+    /* Selecciona el icono segun  tipo de mensaje*/
+    switch (type) {
+      case 'warning':
+        icon = '⚠️';  // Advertencia
+        break;
+      case 'info':
+        icon = 'ℹ️';  // Informacion
+        break;
+      case 'error':
+        icon = '❌';  // Error
+        break;
+      default:
+        icon = 'ℹ️';  // default (no se me ocuarrio otro icono)
+    }
+
     const toast = await this.toastController.create({
-      message: message,
+      message: `${icon} ${message}`,
       duration: 5000,
       position: 'bottom',
-      color: color
+      color: color,
+      cssClass: 'alerta-naveg'
     });
     toast.present();
   }
+  }
 
-}

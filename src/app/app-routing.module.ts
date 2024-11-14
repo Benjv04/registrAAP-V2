@@ -16,7 +16,7 @@ const routes: Routes = [
   },
   {
     path: 'reset-pass',
-    loadChildren: () => import('./pages/reset-pass/reset-pass.module').then( m => m.ResetPassPageModule)
+    loadChildren: () => import('./pages/reset-pass/reset-pass.module').then( m => m.ResetPassPageModule),
   },
   {
     path: 'home', 

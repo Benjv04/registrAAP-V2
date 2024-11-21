@@ -11,7 +11,31 @@ import { Usuario } from '../../models/usuario';
 })
 export class HomePage implements OnInit {
   texto: string = ''; 
-  alumnos:Usuario[]=[];
+  alumnos: Usuario[] = [];
+
+  // Definir variables
+  asignatura: string = '';
+  seccion: string = 'A';
+  sala: string = '';
+  fecha: string = '';
+
+  // Definir un horario 
+  horario: { [key: string]: string } = {
+    '08:00-10:00': 'Matematicas',
+    '10:00-12:00': 'Inglés',
+    '12:00-14:00': 'Quimica',
+    '14:00-16:00': 'Historia',
+    '16:00-18:00': 'Educacion fisica',
+  };
+
+  // Definir las salas 
+  salas: { [key: string]: string } = {
+    'Matematicas': '001',
+    'Inglés': '002',
+    'Quimica': '003',
+    'Historia': '004',
+    'Educacion fisica': 'Patio',
+  };
 
   constructor(private router: Router, private loginService: LoginService) {}
 
@@ -22,18 +46,53 @@ export class HomePage implements OnInit {
       return;
     }
     this.alumnos = this.loginService.getAlumnos();
+
+    // Establecer fecha actual
+    this.fecha = new Date().toLocaleDateString();
   }
 
   generarQR() {
-    this.texto ='Bienvenido a RegistrAPP';
+    // Obtener la asignatura
+    this.asignatura = this.obtenerAsignaturaActual();
+    if (this.asignatura === '') {
+      console.error('No hay una asignatura asignada para la hora actual');
+      return;
+    }
+
+    // Obtener la sala 
+    this.sala = this.obtenerSalaAsignatura(this.asignatura);
+
+    // Crear el texto con formato
+    this.texto = `${this.asignatura}|${this.seccion}|${this.sala}|${this.fecha}`;
     console.log('QR generado:', this.texto);
+  }
+
+  obtenerAsignaturaActual(): string {
+    const now = new Date();
+    const currentHour = `${now.getHours()}:${now.getMinutes() < 10 ? '0' : ''}${now.getMinutes()}`;
+
+    // Buscar asignatura dependiendo de hora
+    for (let rango in this.horario) {
+      const [start, end] = rango.split('-');
+      if (this.estaEnRango(currentHour, start, end)) {
+        return this.horario[rango];
+      }
+    }
+    return '';
+  }
+
+  obtenerSalaAsignatura(asignatura: string): string {
+    return this.salas[asignatura] || '000'; 
+  }
+
+  estaEnRango(current: string, start: string, end: string): boolean {
+    return current >= start && current <= end;
   }
 
   async cerrarSesion() {
     await this.loginService.cerrarSesion();  
     this.router.navigate(['/login']); 
   }
-  
 
   cambiarPresencia(alumno: Usuario) {
     alumno.presente = !alumno.presente;
@@ -41,4 +100,3 @@ export class HomePage implements OnInit {
     this.loginService.actualizarAsistencia(alumno.username, alumno.presente); 
   }
 }
-

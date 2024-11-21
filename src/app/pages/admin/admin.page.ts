@@ -69,7 +69,7 @@ export class AdminPage implements OnInit {
   //cerrar formulario
   cerrarFormulario() {
     this.mostrarFormulario = false;
-    this.nuevoAlumno = new Usuario('', '', 'alumno', '', ''); // Reiniciar el modelo
+    this.nuevoAlumno = new Usuario('', '', 'alumno', '', '');
   }
   async cerrarSesion() {
     await this.loginService.cerrarSesion();  
@@ -95,7 +95,7 @@ export class AdminPage implements OnInit {
         {
           text: 'Confirmar',
           handler: async (data) => {
-            const adminPassword = '12345'; 
+            const adminPassword = '12345'; //contraseña fija de admin (por ahora 12345)
             if (data.password === adminPassword) {
               await this.restablecerUsuarios();
               this.showToast('Usuarios restablecidos con exito', 'success');

@@ -3,9 +3,8 @@ import { Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { LoginService } from '../../services/login.service';
 import { Usuario } from '../../models/usuario';
-import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { AlertController } from '@ionic/angular';
-
+import { CapacitorBarcodeScanner, CapacitorBarcodeScannerTypeHint } from '@capacitor/barcode-scanner';
 
 interface Feriado {
   date: string;
@@ -21,13 +20,15 @@ interface Feriado {
   styleUrls: ['./home-alumnos.page.scss'],
 })
 export class HomeAlumnosPage implements OnInit {
-  usuario: Usuario | null= null;
+  usuario: Usuario | null = null;
   fechaHoraRegistro: string | null = null;
   mensajeBienvenida: string = '';
   feriados: any[] = [];
-  foto: string | null = null;
+  result: string = '';
 
-  constructor(private router: Router, private apiService: ApiService,
+  constructor(
+    private router: Router,
+    private apiService: ApiService,
     private loginService: LoginService,
     private alertController: AlertController
   ) {}
@@ -48,30 +49,29 @@ export class HomeAlumnosPage implements OnInit {
     this.obtenerFeriados();
   }
 
-  async registrarAsistencia() {
+  async scan(): Promise<void> {
     try {
-      await this.abrirCamara();
-  
-      this.fechaHoraRegistro = new Date().toLocaleString();
-      console.log('Asistencia registrada en:', this.fechaHoraRegistro);
-  
-      setTimeout(() => {
-        const elem = document.querySelector('.asisRegist');
-        if (elem) {
-          elem.classList.add('hidden');
-        }
-        setTimeout(() => {
-          this.fechaHoraRegistro = null;
-        }, 500);
-      }, 3000);
+      const result = await CapacitorBarcodeScanner.scanBarcode({
+        hint: CapacitorBarcodeScannerTypeHint.ALL,
+      });
+
+      if (result.ScanResult) {
+        this.result = result.ScanResult;
+        console.log('Resultado del escaneo:', this.result);
+
+        // Registrar asistencia despues de escaneo
+        this.fechaHoraRegistro = new Date().toLocaleString();
+        console.log('Asistencia registrada en:', this.fechaHoraRegistro);
+      }
     } catch (error) {
-      console.error('Error al registrar asistencia:', error);
+      console.error('Error al escanear el codigo QR:', error);
+      this.mostrarAlertaError('Error al abrir el escaner, intenta de nuevo.');
     }
   }
 
   async cerrarSesion() {
-    await this.loginService.cerrarSesion(); 
-    this.router.navigate(['/login']); 
+    await this.loginService.cerrarSesion();
+    this.router.navigate(['/login']);
   }
 
   obtenerFeriados() {
@@ -83,7 +83,7 @@ export class HomeAlumnosPage implements OnInit {
 
           this.feriados = response.data
             .filter((feriado: Feriado) => {
-              const feriadoDate = new Date(feriado.date); 
+              const feriadoDate = new Date(feriado.date);
               return feriadoDate >= today;
             })
             .slice(0, 5);
@@ -99,40 +99,13 @@ export class HomeAlumnosPage implements OnInit {
     );
   }
 
-  async abrirCamara() {
-    try {
-      const image = await Camera.getPhoto({
-        quality: 90,
-        allowEditing: false,
-        resultType: CameraResultType.Base64,
-        source: CameraSource.Camera,
-      });
-  
-      this.foto = `data:image/jpeg;base64,${image.base64String}`;
-      console.log('Foto capturada:', this.foto);
-    } catch (error: any) {  
-      console.error('Error al abrir la cámara', error);
-      if (error.message && error.message.includes('denied')) {
-        this.mostrarAlertaPermisos();
-      }
-    }
-  }
-  
-
-  async mostrarAlertaPermisos() {
+  async mostrarAlertaError(message: string) {
     const alert = await this.alertController.create({
-      header: 'Permiso Requerido',
-      message: 'Para utilizar la cámara, necesitas permitir el acceso en la configuración.',
-      buttons: [
-        {
-          text: 'Entendido',
-          role: 'cancel',
-        },
-      ],
+      header: 'Error',
+      message: message,
+      buttons: ['OK'],
     });
-  
+
     await alert.present();
   }
-  
-  
 }

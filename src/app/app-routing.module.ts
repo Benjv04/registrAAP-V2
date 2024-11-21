@@ -2,6 +2,7 @@ import { AuthGuard } from './auth.guard';
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { audit } from 'rxjs';
+import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 
 const routes: Routes = [
   {
@@ -15,7 +16,7 @@ const routes: Routes = [
   },
   {
     path: 'reset-pass',
-    loadChildren: () => import('./pages/reset-pass/reset-pass.module').then( m => m.ResetPassPageModule)
+    loadChildren: () => import('./pages/reset-pass/reset-pass.module').then( m => m.ResetPassPageModule),
   },
   {
     path: 'home', 
@@ -31,6 +32,10 @@ const routes: Routes = [
     path: 'admin',
     loadChildren: () => import('./pages/admin/admin.module').then( m => m.AdminPageModule),
     canActivate: [AuthGuard]
+  },
+  {
+    path: '**',  
+    component: PageNotFoundComponent, 
   },
 
 ];

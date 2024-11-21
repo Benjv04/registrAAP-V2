@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
+import { ToastController, LoadingController } from '@ionic/angular';
 import { LoginService } from '../../services/login.service';
 import { Usuario } from '../../models/usuario';
 
@@ -12,38 +12,44 @@ import { Usuario } from '../../models/usuario';
 export class LoginPage {
   username: string = ''; 
   password: string = '';
+  isLoading = false;
 
   constructor(
     private toastController: ToastController,
     private router: Router,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private loadingCtrl: LoadingController
   ) {}
 
   async validateLogin() {
     console.log('Ejecutando validación login');
     
-    const user: Usuario | null = this.loginService.validateLogin(this.username, this.password);
+    // mostrar el loading
+    const loading = await this.loadingCtrl.create({
+      message: 'Cargando...',
+      spinner: 'crescent',
+    });
+    await loading.present();
+
+    const user: Usuario | null = await this.loginService.validateLogin(this.username, this.password);
 
     if (user) {
       await this.loginService.guardarUsuario(user);
 
-      this.showToastMessage('Login con exito', 'primary');
-      //redirigir segun rol
-      //alumno
+      this.showToastMessage('Login con éxito', 'primary');
+
       if (user.rol === 'alumno') {
         user.presente = true; 
         this.loginService.actualizarAsistencia(user.username, user.presente);
         console.log(`Presencia de ${user.name}: ${user.presente ? 'Presente' : 'Ausente'}`);
-        this.router.navigate(['/home-alumnos'], { state: { username: user.username } });
-      } 
-      //admin
+        await this.router.navigate(['/home-alumnos'], { state: { username: user.username } });
+      } //admin
       else if (user.rol === 'admin') {
-        this.router.navigate(['/admin'], { state: { username: user.username } });
+        await this.router.navigate(['/admin'], { state: { username: user.username } });
         console.log('redirigiendo a admin');
-      } 
-      //profesor
+      } //profesor
       else if (user.rol === 'profesor') {
-        this.router.navigate(['/home'], { state: { username: user.username } });
+        await this.router.navigate(['/home'], { state: { username: user.username } });
         console.log('redirigiendo a profesor');
       } 
 
@@ -52,8 +58,11 @@ export class LoginPage {
     } 
     //mensaje de error
     else {
-      this.showToastMessage('¡Login erroneo!', 'danger');
+      this.showToastMessage('¡Login erróneo!', 'danger');
     }
+
+    await this.delay(500);
+    loading.dismiss();
   }
 
   async showToastMessage(message: string, color: string) {
@@ -64,5 +73,9 @@ export class LoginPage {
       color: color
     });
     toast.present();
+  }
+
+  private delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }

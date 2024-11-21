@@ -37,7 +37,7 @@
 
       <!-------boton-->
       <div class="boton">
-        <ion-button (click)="mostrarcontrasena ? onSubmit() : mostrarCodigo ? verificarCodigo() : verificacion()">
+        <ion-button (click)="mostrarcontrasena ? confirmarRestablecimiento() : mostrarCodigo ? verificarCodigo() : verificacion()">
           {{ mostrarcontrasena ? 'Restablecer contraseña' : 'Continuar' }}
         </ion-button>
       </div>

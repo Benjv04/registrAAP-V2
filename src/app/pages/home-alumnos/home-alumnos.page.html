@@ -34,7 +34,8 @@
       </h2>
     </ion-text>
 
-    <ion-button expand="block" color="dark" (click)="registrarAsistencia()">Registrar Asistencia</ion-button>
+    <!-- Boton-->
+    <ion-button expand="block" color="dark" (click)="scan()">Escanear Codigo QR para Asistencia</ion-button>
 
     <div *ngIf="fechaHoraRegistro" class="asisRegist">
       <ion-text color="dark">
@@ -42,6 +43,13 @@
         <p>Fecha y Hora: {{ fechaHoraRegistro }}</p>
       </ion-text>
     </div>
+
+    <!-- Mostrar el resultado-->
+    <ion-item *ngIf="result">
+      <p>{{ result }}</p>
+    </ion-item>
+
+
     <div class="feriados">
       <ion-text color="black">
         <h2 class="ion-text-center">Próximos Feriados</h2>
@@ -58,5 +66,6 @@
     <div class="trineo"> 
       <ion-img src="assets/img/trineo.webp"></ion-img>
     </div>
+
   </ion-content>
 </div>

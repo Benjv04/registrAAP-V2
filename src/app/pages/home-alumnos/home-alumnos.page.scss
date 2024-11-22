@@ -75,6 +75,36 @@ ion-header[translucent] {
   background: rgba(221, 43, 75, 0.914);
 }
 
-.cerrarsesion{
-  --background: rgba(59, 141, 57, 0.914);
+.cerrarsesion {
+  --ion-background-color: rgba(59, 141, 57, 0.914);
+  background-color: rgba(59, 141, 57, 0.914);
+}
+
+
+
+
+
+/* Clase específica para este ion-content */
+.content-asignaturas {
+  --padding-start: 0; /* Elimina el padding a la izquierda */
+  --padding-end: 0; /* Elimina el padding a la derecha */
+  --padding-bottom: 0; /* Elimina el padding inferior */
+}
+
+/* Mantén las reglas para ion-list y ion-item */
+.lisAsi{
+  background-color: rgba(59, 141, 57, 0.914); /* Fondo del contenedor */
+  width: 100%; /* Asegura que ocupe todo el ancho */
+}
+
+ion-item {
+  width: 100%; /* Ocupa todo el ancho disponible */
+  margin: 10px 0; /* Espaciado entre los botones */
+  --background: rgba(59, 141, 57, 0.1); /* Fondo del botón */
+  --color: black; /* Color del texto */
+  border-radius: 8px; /* Bordes redondeados */
+}
+
+ion-item:hover {
+  --background: rgba(59, 141, 57, 0.2); /* Cambia ligeramente el fondo al pasar el mouse */
 }

@@ -83,28 +83,29 @@ export class HomeAlumnosPage implements OnInit {
 
   obtenerFeriados() {
     this.apiService.getFeriados().subscribe(
-      (response) => {
-        if (response.status === 'success' && response.data) {
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
-
-          this.feriados = response.data
-            .filter((feriado: Feriado) => {
-              const feriadoDate = new Date(feriado.date);
-              return feriadoDate >= today;
-            })
-            .slice(0, 5);
-        } else {
-          console.log('No se encontraron feriados');
-          this.feriados = [];
-        }
-        console.log('Feriados obtenidos:', this.feriados);
+      (feriados) => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+  
+        // Filtrar y ordenar feriados por fecha
+        this.feriados = feriados
+          .filter((feriado: { date: string }) => {
+            const feriadoDate = new Date(feriado.date);
+            return feriadoDate >= today;
+          })
+          .sort((a: { date: string }, b: { date: string }) => {
+            return new Date(a.date).getTime() - new Date(b.date).getTime();
+          })
+          .slice(0, 5);
+  
+        console.log('Feriados obtenidos y ordenados:', this.feriados);
       },
       (error) => {
         console.error('Error al obtener los feriados', error);
       }
     );
   }
+  
 
   async mostrarAlertaError(message: string) {
     const alert = await this.alertController.create({

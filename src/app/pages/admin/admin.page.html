@@ -25,7 +25,7 @@
   </ion-header>
 
   <ion-content [fullscreen]="true">
-    <!-- Sección de Alumnos -->
+    <!--Seccion alumnos-->
     <ion-list>
       <ion-item *ngFor="let alumno of alumnos">
         <ion-label>
@@ -47,7 +47,7 @@
       Restablecer Usuarios Predeterminados
     </ion-button>
 
-    <!-- Modal para Formulario de Alumnos -->
+    <!--Formulario de alumnos-->
     <ion-modal [isOpen]="mostrarFormulario" (ionModalDidDismiss)="cerrarFormulario()">
       <ng-template>
         <ion-header>
@@ -82,14 +82,14 @@
 
     <br><br>
 
-    <!-- Sección de Feriados -->
-    <ion-card>
+    <!--Seccion feriados-->
+    <ion-card class="card-borde">
       <ion-card-header>
         <ion-card-title>Administrar Feriados</ion-card-title>
       </ion-card-header>
 
       <ion-card-content>
-        <!-- Lista de Feriados -->
+        <!--Lista feriados-->
         <ion-list>
           <ion-item *ngFor="let feriado of feriados">
             <ion-label>

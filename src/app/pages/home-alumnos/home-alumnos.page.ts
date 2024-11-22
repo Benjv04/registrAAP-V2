@@ -25,6 +25,8 @@ export class HomeAlumnosPage implements OnInit {
   mensajeBienvenida: string = '';
   feriados: any[] = [];
   result: string = '';
+  mostrarAsignatura: boolean = true;
+  seleccionada: string | null = null;
 
   constructor(
     private router: Router,
@@ -47,6 +49,11 @@ export class HomeAlumnosPage implements OnInit {
     console.log(this.mensajeBienvenida);
 
     this.obtenerFeriados();
+  }
+
+  elegirAsignatura(asignatura: string){
+    this.seleccionada = asignatura;
+    this.mostrarAsignatura = false;
   }
 
   async scan(): Promise<void> {

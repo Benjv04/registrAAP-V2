@@ -59,8 +59,8 @@
         </ion-text>
       </div>
   
-      <ion-button expand="block" color="dark" (click)="scan()">Escanear Código QR para Asistencia</ion-button>
-  
+      <ion-button expand="block" color="dark" (click)="scan()">Escanear QR para Asistencia</ion-button>
+
       <div *ngIf="fechaHoraRegistro" class="asisRegist">
         <ion-text color="dark">
           <h3>¡Asistencia registrada!</h3>
@@ -76,7 +76,7 @@
           <ion-item *ngFor="let feriado of feriados">
             <ion-label>
               <h3>{{ feriado.title }}</h3>
-              <p>{{ feriado.date }}</p>
+              <p>{{ feriado.date | date: 'dd-MM-yyyy' }}</p>
             </ion-label>
           </ion-item>
         </ion-list>

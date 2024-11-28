@@ -65,13 +65,28 @@ export class HomeAlumnosPage implements OnInit {
 
   async scan(): Promise<void> {
     try {
-      const barcodes = await this.qrScannerService.scan(); 
+      // Validar si es un día feriado
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+  
+      const esFeriado = this.feriados.some((feriado) => {
+        const feriadoDate = new Date(feriado.date);
+        return feriadoDate.getTime() === today.getTime();
+      });
+  
+      if (esFeriado) {
+        await this.mostrarAlertaError('Hoy es un dia feriado, no se puede registrar asistencia.');
+        return;
+      }
+  
+      // Escanear el código QR
+      const barcodes = await this.qrScannerService.scan();
   
       if (barcodes && barcodes.length > 0) {
-        this.result = barcodes.join(', '); 
+        this.result = barcodes.join(', ');
         console.log('Resultado del escaneo:', this.result);
   
-        // Registrar asistencia 
+        // Registrar asistencia
         this.fechaHoraRegistro = new Date().toLocaleString();
         console.log('Asistencia registrada en:', this.fechaHoraRegistro);
       }
@@ -80,6 +95,7 @@ export class HomeAlumnosPage implements OnInit {
       this.mostrarAlertaError('Error al abrir el escáner, intenta de nuevo.');
     }
   }
+  
   
 
   async cerrarSesion() {

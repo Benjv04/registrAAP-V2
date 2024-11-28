@@ -4,7 +4,8 @@ import { ApiService } from '../../services/api.service';
 import { LoginService } from '../../services/login.service';
 import { Usuario } from '../../models/usuario';
 import { AlertController } from '@ionic/angular';
-import { CapacitorBarcodeScanner, CapacitorBarcodeScannerTypeHint } from '@capacitor/barcode-scanner';
+import { QrScannerService } from '../../services/qr-scanner.service';
+
 
 interface Feriado {
   date: string;
@@ -32,7 +33,8 @@ export class HomeAlumnosPage implements OnInit {
     private router: Router,
     private apiService: ApiService,
     private loginService: LoginService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private qrScannerService: QrScannerService    
   ) {}
 
   async ngOnInit() {
@@ -58,23 +60,22 @@ export class HomeAlumnosPage implements OnInit {
 
   async scan(): Promise<void> {
     try {
-      const result = await CapacitorBarcodeScanner.scanBarcode({
-        hint: CapacitorBarcodeScannerTypeHint.ALL,
-      });
-
-      if (result.ScanResult) {
-        this.result = result.ScanResult;
+      const barcodes = await this.qrScannerService.scan(); 
+  
+      if (barcodes && barcodes.length > 0) {
+        this.result = barcodes.join(', '); 
         console.log('Resultado del escaneo:', this.result);
-
-        // Registrar asistencia despues de escaneo
+  
+        // Registrar asistencia 
         this.fechaHoraRegistro = new Date().toLocaleString();
         console.log('Asistencia registrada en:', this.fechaHoraRegistro);
       }
     } catch (error) {
-      console.error('Error al escanear el codigo QR:', error);
-      this.mostrarAlertaError('Error al abrir el escaner, intenta de nuevo.');
+      console.error('Error al escanear el código QR:', error);
+      this.mostrarAlertaError('Error al abrir el escáner, intenta de nuevo.');
     }
   }
+  
 
   async cerrarSesion() {
     await this.loginService.cerrarSesion();
@@ -82,28 +83,39 @@ export class HomeAlumnosPage implements OnInit {
   }
 
   obtenerFeriados() {
-    this.apiService.getFeriados().subscribe(
-      (feriados) => {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+    this.apiService.getFeriados().subscribe({
+      next: (response: any) => {
+        console.log('Respuesta del servicio:', response);
   
-        // Filtrar y ordenar feriados por fecha
-        this.feriados = feriados
-          .filter((feriado: { date: string }) => {
-            const feriadoDate = new Date(feriado.date);
-            return feriadoDate >= today;
-          })
-          .sort((a: { date: string }, b: { date: string }) => {
-            return new Date(a.date).getTime() - new Date(b.date).getTime();
-          })
-          .slice(0, 5);
+        // verificar si tiene la propiedad `data`
+        if (response && Array.isArray(response.data)) {
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
   
-        console.log('Feriados obtenidos y ordenados:', this.feriados);
+          // filtrar y ordenar feriados
+          this.feriados = response.data
+            .filter((feriado: Feriado) => {
+              const feriadoDate = new Date(feriado.date);
+              return feriadoDate >= today;
+            })
+            .sort((a: Feriado, b: Feriado) => {
+              return new Date(a.date).getTime() - new Date(b.date).getTime();
+            })
+            .slice(0, 5);
+  
+          console.log('Feriados obtenidos y ordenados:', this.feriados);
+        } else {
+          console.error('La respuesta no contiene un arreglo valido de feriados:', response);
+          this.feriados = [];
+        }
       },
-      (error) => {
+      error: (error: any) => {
         console.error('Error al obtener los feriados', error);
-      }
-    );
+      },
+      complete: () => {
+        console.log('Obtención de feriados completada.');
+      },
+    });
   }
   
 

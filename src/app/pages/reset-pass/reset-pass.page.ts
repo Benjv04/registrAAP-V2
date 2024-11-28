@@ -68,13 +68,6 @@ export class ResetPassPage {
     await alert.present();
   }  
 
-  async ngOnInit() {
-    const isAuthenticated = await this.loginService.estaAutenticado();
-    if (!isAuthenticated) {
-      this.router.navigate(['/login']);
-      return;
-    }
-  } 
 
   onSubmit() {
     if (this.password !== this.confirmarcontrasena) {

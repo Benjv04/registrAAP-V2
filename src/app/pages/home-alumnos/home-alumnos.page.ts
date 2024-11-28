@@ -58,6 +58,11 @@ export class HomeAlumnosPage implements OnInit {
     this.mostrarAsignatura = false;
   }
 
+  cambAsig(){
+    this.mostrarAsignatura = true;
+    this.seleccionada = null;
+  }
+
   async scan(): Promise<void> {
     try {
       const barcodes = await this.qrScannerService.scan(); 

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { QRCodeModule } from 'angularx-qrcode';
 import { LoginService } from '../../services/login.service';
 import { Usuario } from '../../models/usuario';
+import { Geolocation } from '@capacitor/geolocation';
 
 @Component({
   selector: 'app-home',
@@ -10,16 +10,17 @@ import { Usuario } from '../../models/usuario';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
-  texto: string = ''; 
-  alumnos: Usuario[] = [];
+  texto: string = ''; // Para el QR
+  alumnos: Usuario[] = []; // Lista de alumnos
+  latitud: number | null = null; // Para almacenar la latitud
+  longitud: number | null = null; // Para almacenar la longitud
 
-  // Definir variables
+  // Variables para asignaturas y horarios
   asignatura: string = '';
   seccion: string = 'A';
   sala: string = '';
   fecha: string = '';
 
-  // Definir un horario 
   horario: { [key: string]: string } = {
     '08:00-10:00': 'Matematicas',
     '10:00-12:00': 'Inglés',
@@ -28,7 +29,6 @@ export class HomePage implements OnInit {
     '16:00-18:00': 'Educacion fisica',
   };
 
-  // Definir las salas 
   salas: { [key: string]: string } = {
     'Matematicas': '001',
     'Inglés': '002',
@@ -59,7 +59,7 @@ export class HomePage implements OnInit {
       return;
     }
 
-    // Obtener la sala 
+    // Obtener la sala
     this.sala = this.obtenerSalaAsignatura(this.asignatura);
 
     // Crear el texto con formato
@@ -82,7 +82,7 @@ export class HomePage implements OnInit {
   }
 
   obtenerSalaAsignatura(asignatura: string): string {
-    return this.salas[asignatura] || '000'; 
+    return this.salas[asignatura] || '000';
   }
 
   estaEnRango(current: string, start: string, end: string): boolean {
@@ -90,13 +90,24 @@ export class HomePage implements OnInit {
   }
 
   async cerrarSesion() {
-    await this.loginService.cerrarSesion();  
-    this.router.navigate(['/login']); 
+    await this.loginService.cerrarSesion();
+    this.router.navigate(['/login']);
   }
 
   cambiarPresencia(alumno: Usuario) {
     alumno.presente = !alumno.presente;
     console.log(`Presencia de ${alumno.name}: ${alumno.presente ? 'Presente' : 'Ausente'}`);
-    this.loginService.actualizarAsistencia(alumno.username, alumno.presente); 
+    this.loginService.actualizarAsistencia(alumno.username, alumno.presente);
+  }
+
+  async obtenerGeolocalizacion() {
+    try {
+      const posicion = await Geolocation.getCurrentPosition();
+      this.latitud = posicion.coords.latitude;
+      this.longitud = posicion.coords.longitude;
+      console.log(`Latitud: ${this.latitud}, Longitud: ${this.longitud}`);
+    } catch (error) {
+      console.error('Error obteniendo la geolocalización:', error);
+    }
   }
 }

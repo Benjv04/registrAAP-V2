@@ -1,13 +1,22 @@
-ion-button {
-    margin-top: 20px;
-  }
 
-ion-toolbar{
+/* Personalización de ion-toolbar */
+ion-toolbar {
   color: black;
   --background: transparent;
   background-color: rgba(221, 43, 75, 0.914);
 }
 
+ion-content {
+  --background: rgba(59, 141, 57, 0.914);
+  height: 100%;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Asegura que el contenido comience desde arriba */
+}
+
+
+/* Estilos para la vista de registro de asistencia */
 .asisRegist {
   display: flex;
   flex-direction: column;
@@ -17,41 +26,85 @@ ion-toolbar{
   padding: 3px;
   background-color: #cfcfcf;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(24, 8, 111, 0.1);
   margin-top: 20px;
   opacity: 1;
   transition: opacity 0.5s ease;
 }
 
-.asisRegist.hidden {
-  opacity: 0;
-}
-
-ion-content{
-  --background: transparent;
-  background-color: rgba(59, 141, 57, 0.914);
-}
-
-.feriados{
-  margin-top: 30px;
-  --background: transparent;
-  background-color: rgba(221, 43, 75, 0.914);
-  border: 0.5px solid black;
-}
-
-.cerrarsesion ion-item{
-  --background: transparent;
-  background-color: rgba(59, 141, 57, 0.914);
+/* Asegura que cada vista ocupe toda la altura de la pantalla */
+.ion-page {
   height: 100%;
-  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Asegura que las vistas se distribuyan correctamente */
 }
 
-ion-menu ion-list {
+/* Estilos para la vista de la asignatura */
+.selecAsig {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Distribuye el contenido a lo largo de la pantalla */
+  align-items: center;
+  padding: 0px;
   --background: rgba(59, 141, 57, 0.914);
-  margin: 0;
-  padding: 0;
 }
 
-ion-icon{
-  color: black;
+/* Estilos para la vista principal de registro de asistencia */
+.assisContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  height: 100%;
+  padding: 0px;
+  --background: rgba(59, 141, 57, 0.914);
+}
+
+/* Ajustes para la vista de selección de asignaturas cuando no se ha elegido ninguna */
+.ion-page > ion-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Asegura que el contenido empiece desde la parte superior */
+  height: 100%; /* Hace que el contenido ocupe toda la altura de la pantalla */
+  padding: 0; /* Elimina cualquier padding que pueda interferir */
+}
+
+/* Ajustes para ion-header */
+ion-header[translucent] {
+  background: rgba(221, 43, 75, 0.914);
+}
+
+.cerrarsesion {
+  --ion-background-color: rgba(59, 141, 57, 0.914);
+  background-color: rgba(59, 141, 57, 0.914);
+}
+
+
+
+
+
+/* Clase específica para este ion-content */
+.content-asignaturas {
+  --padding-start: 0; /* Elimina el padding a la izquierda */
+  --padding-end: 0; /* Elimina el padding a la derecha */
+  --padding-bottom: 0; /* Elimina el padding inferior */
+}
+
+/* Mantén las reglas para ion-list y ion-item */
+.lisAsi{
+  background-color: rgba(59, 141, 57, 0.914); /* Fondo del contenedor */
+  width: 100%; /* Asegura que ocupe todo el ancho */
+}
+
+ion-item {
+  width: 100%; /* Ocupa todo el ancho disponible */
+  margin: 10px 0; /* Espaciado entre los botones */
+  --background: rgba(59, 141, 57, 0.1); /* Fondo del botón */
+  --color: black; /* Color del texto */
+  border-radius: 8px; /* Bordes redondeados */
+}
+
+ion-item:hover {
+  --background: rgba(59, 141, 57, 0.2); /* Cambia ligeramente el fondo al pasar el mouse */
 }

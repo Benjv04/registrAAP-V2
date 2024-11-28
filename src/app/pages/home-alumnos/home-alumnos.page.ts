@@ -105,7 +105,7 @@ export class HomeAlumnosPage implements OnInit {
   
           console.log('Feriados obtenidos y ordenados:', this.feriados);
         } else {
-          console.error('La respuesta no contiene un arreglo válido de feriados:', response);
+          console.error('La respuesta no contiene un arreglo valido de feriados:', response);
           this.feriados = [];
         }
       },
@@ -117,6 +117,7 @@ export class HomeAlumnosPage implements OnInit {
       },
     });
   }
+  
 
   async mostrarAlertaError(message: string) {
     const alert = await this.alertController.create({

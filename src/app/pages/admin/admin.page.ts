@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { LoginService } from '../../services/login.service';
 import { Usuario } from '../../models/usuario';
@@ -43,7 +42,6 @@ export class AdminPage implements OnInit {
 
   // Abrir formulario para editar
   abrirFormulario(alumno?: Usuario) {
-    console.log('Abriendo formulario', alumno);
     this.mostrarFormulario = true;
 
     if (alumno) {
@@ -140,10 +138,10 @@ export class AdminPage implements OnInit {
   async cargarFeriados() {
     try {
       this.feriados = await this.apiService.getFeriados().toPromise();
-  
+
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-  
+
       this.feriados = this.feriados
         .filter((feriado: { date: string }) => {
           const feriadoDate = new Date(feriado.date);
@@ -152,16 +150,15 @@ export class AdminPage implements OnInit {
         .sort((a: { date: string }, b: { date: string }) => {
           return new Date(a.date).getTime() - new Date(b.date).getTime();
         });
-  
+
       console.log('Feriados futuros obtenidos:', this.feriados);
     } catch (error) {
       console.error('Error al cargar los feriados', error);
       this.showToast('Error al cargar los feriados', 'danger');
     }
   }
-  
 
-  // Agregar un feriado personalizado
+// Agregar un feriado personalizado
   async agregarFeriado() {
     const alert = await this.alertController.create({
       header: 'Agregar Feriado',
@@ -169,13 +166,11 @@ export class AdminPage implements OnInit {
         {
           name: 'date',
           type: 'date',
-          label: 'Fecha',
           placeholder: 'Selecciona una fecha',
         },
         {
           name: 'title',
           type: 'text',
-          label: 'Título',
           placeholder: 'Título del feriado',
         },
       ],
@@ -187,37 +182,47 @@ export class AdminPage implements OnInit {
         {
           text: 'Guardar',
           handler: (data) => {
-            if (data.date && data.title) {
-              this.apiService.addFeriado({ date: data.date, title: data.title });
-              this.showToast('Feriado agregado con éxito', 'success');
-              this.cargarFeriados();
-            } else {
-              this.showToast('Por favor complete todos los campos', 'warning');
+            const hoy = new Date().toISOString().split('T')[0];
+            console.log('Fecha ingresada:', data.date, 'Fecha de hoy:', hoy);
+
+            if (!data.date || !data.title) {
+              this.showToast('Por favor completa todos los campos', 'warning');
+              return false;
             }
+
+            if (data.date < hoy) {
+              this.showToast('No puedes agregar feriados en el pasado', 'warning');
+              return false;
+            }
+
+            this.apiService.addFeriado({ date: data.date, title: data.title });
+            this.showToast('Feriado agregado con éxito', 'success');
+            this.cargarFeriados();
+            return true;
           },
         },
       ],
     });
-  
+
     await alert.present();
   }
-  
+
+
 
   // Eliminar un feriado personalizado
   async eliminarFeriado(date: string) {
+    const formattedDate = new Date(date).toISOString().split('T')[0];
     const apiHoliday = this.feriados.find(
-      (feriado) => feriado.date === date && !feriado.isCustom
+      (feriado) => feriado.date === formattedDate && !feriado.isCustom
     );
-  
+
     if (apiHoliday) {
       this.showToast('No se puede eliminar un feriado oficial', 'danger');
       return;
     }
-  
-    // Si es un feriado personalizado, eliminarlo
-    this.apiService.deleteFeriado(date);
+
+    this.apiService.deleteFeriado(formattedDate);
     this.showToast('Feriado eliminado con éxito', 'success');
     this.cargarFeriados();
   }
-  
 }

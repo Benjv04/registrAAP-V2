@@ -75,26 +75,25 @@ export class HomeAlumnosPage implements OnInit {
       });
   
       if (esFeriado) {
-        await this.mostrarAlertaError('Hoy es un dia feriado, no se puede registrar asistencia.');
+        await this.mostrarAlertaError('Hoy es un día feriado, no se puede registrar asistencia.');
         return;
       }
   
       // Escanear el código QR
       const barcodes = await this.qrScannerService.scan();
   
-      if (barcodes && barcodes.length > 0) {
-        this.result = barcodes.join(', ');
-        console.log('Resultado del escaneo:', this.result);
+      this.result = barcodes.join(', ');
+      console.log('Resultado del escaneo:', this.result);
   
-        // Registrar asistencia
-        this.fechaHoraRegistro = new Date().toLocaleString();
-        console.log('Asistencia registrada en:', this.fechaHoraRegistro);
-      }
+      // Registrar asistencia
+      this.fechaHoraRegistro = new Date().toLocaleString();
+      console.log('Asistencia registrada en:', this.fechaHoraRegistro);
     } catch (error) {
       console.error('Error al escanear el código QR:', error);
       this.mostrarAlertaError('Error al abrir el escáner, intenta de nuevo.');
     }
   }
+  
   
   
 
@@ -104,39 +103,28 @@ export class HomeAlumnosPage implements OnInit {
   }
 
   obtenerFeriados() {
-    this.apiService.getFeriados().subscribe({
-      next: (response: any) => {
-        console.log('Respuesta del servicio:', response);
-  
-        // verificar si tiene la propiedad `data`
-        if (response && Array.isArray(response.data)) {
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
-  
-          // filtrar y ordenar feriados
-          this.feriados = response.data
-            .filter((feriado: Feriado) => {
-              const feriadoDate = new Date(feriado.date);
-              return feriadoDate >= today;
-            })
-            .sort((a: Feriado, b: Feriado) => {
-              return new Date(a.date).getTime() - new Date(b.date).getTime();
-            })
-            .slice(0, 5);
-  
-          console.log('Feriados obtenidos y ordenados:', this.feriados);
-        } else {
-          console.error('La respuesta no contiene un arreglo valido de feriados:', response);
-          this.feriados = [];
-        }
+    this.apiService.getFeriados().subscribe(
+      (feriados) => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        // Filtrar y ordenar feriados por fecha
+        this.feriados = feriados
+          .filter((feriado: { date: string }) => {
+            const feriadoDate = new Date(feriado.date);
+            return feriadoDate >= today;
+          })
+          .sort((a: { date: string }, b: { date: string }) => {
+            return new Date(a.date).getTime() - new Date(b.date).getTime();
+          })
+          .slice(0, 5);
+
+        console.log('Feriados obtenidos y ordenados:', this.feriados);
       },
-      error: (error: any) => {
+      (error) => {
         console.error('Error al obtener los feriados', error);
-      },
-      complete: () => {
-        console.log('Obtención de feriados completada.');
-      },
-    });
+      }
+    );
   }
   
 

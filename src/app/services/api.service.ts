@@ -7,10 +7,15 @@ import { catchError, map } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class ApiService {
-  private apiUrl = 'https://api.boostr.cl/holidays.json';
-  private localStorageKey = 'customHolidays';
+  private apiUrl = 'https://api.boostr.cl/holidays.json'; // URL de la API
+  private localStorageKey = 'customHolidays'; // Clave para feriados locales
 
   constructor(private http: HttpClient) {}
+
+  // Función para normalizar fechas (formato YYYY-MM-DD)
+  private normalizeDate(date: string | Date): string {
+    return new Date(date).toISOString().split('T')[0];
+  }
 
   // Obtener feriados combinados (API + Local)
   getFeriados(): Observable<any> {
@@ -18,13 +23,13 @@ export class ApiService {
       map((response: any) => {
         const apiHolidays = (response.data || []).map((holiday: any) => ({
           ...holiday,
-          date: new Date(holiday.date).toISOString().split('T')[0], // Formato consistente
+          date: this.normalizeDate(holiday.date), // Normalizar fecha
           isCustom: false,
         }));
 
         const localHolidays = (JSON.parse(localStorage.getItem(this.localStorageKey) || '[]') || []).map((holiday: any) => ({
           ...holiday,
-          date: new Date(holiday.date).toISOString().split('T')[0], // Formato consistente
+          date: this.normalizeDate(holiday.date), // Normalizar fecha
           isCustom: true,
         }));
 
@@ -32,52 +37,57 @@ export class ApiService {
       }),
       catchError((error) => {
         console.error('Error obteniendo los feriados', error);
-        return of([]);
+        return of([]); // En caso de error, retornar arreglo vacío
       })
     );
   }
 
   // Agregar un nuevo feriado a localStorage
-  addFeriado(feriado: { date: string; title: string }) {
+  addFeriado(feriado: { date: string; title: string }): boolean {
     const customHolidays = JSON.parse(localStorage.getItem(this.localStorageKey) || '[]');
-  
-    const formattedDate = new Date(feriado.date).toISOString().split('T')[0];
-    const today = new Date().toISOString().split('T')[0];
-  
-    console.log('Feriado recibido:', feriado);
-    console.log('Fecha normalizada:', formattedDate, 'Hoy:', today);
-  
+    const formattedDate = this.normalizeDate(feriado.date);
+    const today = this.normalizeDate(new Date());
+
     if (formattedDate < today) {
       console.error('No se pueden agregar feriados en el pasado');
-      return;
+      return false;
     }
-  
+
     const existe = customHolidays.some(
-      (h: any) => new Date(h.date).toISOString().split('T')[0] === formattedDate
+      (h: any) => this.normalizeDate(h.date) === formattedDate
     );
-  
+
     if (existe) {
       console.error('El feriado ya existe');
-      return;
+      return false;
     }
-  
+
     customHolidays.push({
       ...feriado,
       date: formattedDate,
     });
-  
+
     localStorage.setItem(this.localStorageKey, JSON.stringify(customHolidays));
     console.log('Feriado agregado:', feriado);
+    return true;
   }
 
   // Eliminar un feriado de localStorage
-  deleteFeriado(date: string) {
+  deleteFeriado(date: string): boolean {
     let customHolidays = JSON.parse(localStorage.getItem(this.localStorageKey) || '[]');
-    const formattedDate = new Date(date).toISOString().split('T')[0]; // Formatear fecha
+    const formattedDate = this.normalizeDate(date);
 
-    customHolidays = customHolidays.filter(
-      (h: any) => new Date(h.date).toISOString().split('T')[0] !== formattedDate
+    const nuevosFeriados = customHolidays.filter(
+      (h: any) => this.normalizeDate(h.date) !== formattedDate
     );
-    localStorage.setItem(this.localStorageKey, JSON.stringify(customHolidays));
+
+    if (customHolidays.length === nuevosFeriados.length) {
+      console.error('No se encontró el feriado para eliminar');
+      return false;
+    }
+
+    localStorage.setItem(this.localStorageKey, JSON.stringify(nuevosFeriados));
+    console.log('Feriado eliminado:', formattedDate);
+    return true;
   }
 }

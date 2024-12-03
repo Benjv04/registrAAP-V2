@@ -22,13 +22,13 @@ interface Feriado {
 })
 export class HomeAlumnosPage implements OnInit {
   // Propiedades
-  usuario: Usuario | null = null; // Información del usuario autenticado
-  fechaHoraRegistro: string | null = null; // Fecha y hora de asistencia registrada
-  mensajeBienvenida: string = ''; // Mensaje de bienvenida para el usuario
-  feriados: Feriado[] = []; // Lista de feriados (obtenidos de la API o local)
-  result: string = ''; // Resultado del escaneo del código QR
-  mostrarAsignatura: boolean = true; // Mostrar u ocultar selección de asignaturas
-  seleccionada: string | null = null; // Asignatura seleccionada
+  usuario: Usuario | null = null;
+  fechaHoraRegistro: string | null = null;
+  mensajeBienvenida: string = '';
+  feriados: Feriado[] = [];
+  result: string = '';
+  mostrarAsignatura: boolean = true;
+  seleccionada: string | null = null;
 
   constructor(
     private router: Router,

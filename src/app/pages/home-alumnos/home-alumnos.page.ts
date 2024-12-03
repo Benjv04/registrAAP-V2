@@ -21,14 +21,14 @@ interface Feriado {
   styleUrls: ['./home-alumnos.page.scss'],
 })
 export class HomeAlumnosPage implements OnInit {
-  usuario: Usuario | null = null; 
-  fechaHoraRegistro: string | null = null; 
-  mensajeBienvenida: string = ''; 
-  feriados: Feriado[] = []; 
-  result: string = ''; 
+  // Propiedades
+  usuario: Usuario | null = null;
+  fechaHoraRegistro: string | null = null;
+  mensajeBienvenida: string = '';
+  feriados: Feriado[] = [];
+  result: string = '';
   mostrarAsignatura: boolean = true;
-  seleccionada: string | null = null; 
-
+  seleccionada: string | null = null;
   constructor(
     private router: Router,
     private apiService: ApiService,

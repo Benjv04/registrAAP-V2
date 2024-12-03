@@ -10,12 +10,11 @@ import { Geolocation } from '@capacitor/geolocation';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
-  texto: string = ''; // Para el QR
-  alumnos: Usuario[] = []; // Lista de alumnos
-  latitud: number | null = null; // Para almacenar la latitud
-  longitud: number | null = null; // Para almacenar la longitud
+  texto: string = ''; 
+  alumnos: Usuario[] = []; 
+  latitud: number | null = null; 
+  longitud: number | null = null;
 
-  // Variables para asignaturas y horarios
   asignatura: string = '';
   seccion: string = 'A';
   sala: string = '';
@@ -26,7 +25,7 @@ export class HomePage implements OnInit {
     '10:00-12:00': 'Inglés',
     '12:00-14:00': 'Quimica',
     '14:00-16:00': 'Historia',
-    '16:00-18:00': 'Educacion fisica',
+    '16:00-22:00': 'Educacion fisica',
   };
 
   salas: { [key: string]: string } = {

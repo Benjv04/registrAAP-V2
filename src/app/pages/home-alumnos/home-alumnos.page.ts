@@ -70,7 +70,8 @@ export class HomeAlumnosPage implements OnInit {
   // Escanear QR y registrar asistencia
   async scan(): Promise<void> {
     try {
-      const today = new Date().toISOString().split('T')[0];
+      // Validar si es feriado
+      const today = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD
       const esFeriado = this.feriados.some((feriado) => feriado.date === today);
 
       if (esFeriado) {
@@ -78,26 +79,42 @@ export class HomeAlumnosPage implements OnInit {
         return;
       }
 
+      // Escanear QR
       const barcodes = await this.qrScannerService.scan();
       this.result = barcodes.join(', ');
       console.log('Resultado del escaneo:', this.result);
 
-      // Procesar el mensaje del QR
-      const [asignatura, letra, codigo, fecha] = this.result.split('|');
-
-      if (this.usuario) {
-        // Actualizar asistencia
-        this.loginService.actualizarAsistencia(this.usuario.username, true);
-        console.log(`Asistencia de ${this.usuario.username} registrada para la asignatura ${asignatura}`);
-
-        this.fechaHoraRegistro = new Date().toLocaleString();
-        console.log('Asistencia registrada:', this.fechaHoraRegistro);
+      // Validar el formato QR 
+      const qrPattern = /^[A-Za-z\s]+?\|[A-Za-z]\|[A-Za-z\s]+\|\d{2}-\d{2}-\d{4}$/;
+      if (!qrPattern.test(this.result)) {
+        await this.mostrarAlertaError('El QR escaneado no es el esperado.');
+        return;
       }
+
+      // Registrar asistencia
+      this.fechaHoraRegistro = new Date().toLocaleString();
+      console.log('Asistencia registrada:', this.fechaHoraRegistro);
+    // Actualizar la asistencia para el usuario
+      if (this.usuario) {
+        this.loginService.actualizarAsistencia(this.usuario.username, true);
+        console.log(`Asistencia actualizada para ${this.usuario.username}`);
+      }
+      // Logica si lo quiero hacer con la asignatura
+      //if (this.usuario) {
+      //  const asignatura = this.result.split('|')[0]; 
+      //  if (this.seleccionada === asignatura) {
+      //    this.loginService.actualizarAsistencia(this.usuario.username, true);
+      //    console.log(`Asistencia actualizada para ${this.usuario.username} en la asignatura ${asignatura}`);
+      //  } else {
+      //    await this.mostrarAlertaError('La asignatura del QR no coincide con la asignatura seleccionada.');
+      //  }
+      //}
     } catch (error) {
       console.error('Error al escanear el código QR:', error);
       this.mostrarAlertaError('Error al abrir el escáner, intenta de nuevo.');
     }
   }
+
 
   // Cerrar sesion
   async cerrarSesion() {

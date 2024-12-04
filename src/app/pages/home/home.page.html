@@ -35,6 +35,14 @@
 
     <br/>
 
+    <!-- Botón para generar QR -->
+    <ion-button expand="block" color="dark" (click)="generarQR()">Generar QR</ion-button>
+
+    <br><br>
+
+    <!-- Código QR generado -->
+    <qrcode *ngIf="texto" [qrdata]="texto" [width]="400" class="qr"></qrcode>
+
     <ion-card class="listado">
       <ion-list *ngIf="!mostrarAlumnos">
         <h2 class="ion-text-center">

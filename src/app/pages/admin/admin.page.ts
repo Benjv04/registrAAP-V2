@@ -146,7 +146,7 @@ export class AdminPage implements OnInit {
         .filter((feriado: { date: string }) => {
           const feriadoDate = new Date(feriado.date).toISOString().split('T')[0];
           const todayDate = today.toISOString().split('T')[0];
-          return feriadoDate >= todayDate; // Ahora incluye el día de hoy
+          return feriadoDate >= todayDate; 
         })
         .sort((a: { date: string }, b: { date: string }) => {
           return new Date(a.date).getTime() - new Date(b.date).getTime();
@@ -196,7 +196,7 @@ export class AdminPage implements OnInit {
             }
 
             this.apiService.addFeriado({ date: data.date, title: data.title });
-            this.showToast('Feriado agregado con éxito', 'success');
+            this.showToast('Feriado agregado con exito', 'success');
             this.cargarFeriados();
             return true;
           },

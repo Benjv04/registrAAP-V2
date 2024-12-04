@@ -10,6 +10,7 @@ import { Geolocation } from '@capacitor/geolocation';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
+
   texto: string = '';
   alumnos: Usuario[] = [];
   alumnosFiltrados: Usuario[] = [];
@@ -30,7 +31,7 @@ export class HomePage implements OnInit {
     '10:00-12:00': 'Inglés',
     '12:00-14:00': 'Quimica',
     '14:00-16:00': 'Historia',
-    '16:00-18:00': 'Educacion fisica',
+    '16:00-22:00': 'Educacion fisica',
   };
 
   salas: { [key: string]: string } = {

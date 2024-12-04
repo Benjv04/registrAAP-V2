@@ -38,7 +38,6 @@ export class HomeAlumnosPage implements OnInit {
     private qrScannerService: QrScannerService
   ) {}
 
-  // Inicialización del componente
   async ngOnInit() {
     const isAuthenticated = await this.loginService.estaAutenticado();
     if (!isAuthenticated) {
@@ -58,13 +57,13 @@ export class HomeAlumnosPage implements OnInit {
   // Seleccionar una asignatura
   elegirAsignatura(asignatura: string) {
     this.seleccionada = asignatura;
-    this.mostrarAsignatura = false; // Ocultar lista de asignaturas
+    this.mostrarAsignatura = false; 
     console.log(`Asignatura seleccionada: ${asignatura}`);
   }
 
   // Cambiar de asignatura
   cambAsig() {
-    this.mostrarAsignatura = true; // Mostrar lista de asignaturas nuevamente
+    this.mostrarAsignatura = true; 
     this.seleccionada = null;
     console.log('Cambio de asignatura activado');
   }
@@ -72,7 +71,7 @@ export class HomeAlumnosPage implements OnInit {
   // Escanear QR y registrar asistencia
   async scan(): Promise<void> {
     try {
-      // Validar si es un día feriado
+      // Validar si es feriado
       const today = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD
       const esFeriado = this.feriados.some((feriado) => feriado.date === today);
 
@@ -81,21 +80,44 @@ export class HomeAlumnosPage implements OnInit {
         return;
       }
 
-      // Escanear el código QR
+      // Escanear QR
       const barcodes = await this.qrScannerService.scan();
       this.result = barcodes.join(', ');
       console.log('Resultado del escaneo:', this.result);
 
+      // Validar el formato QR 
+      const qrPattern = /^[A-Za-z\s]+?\|[A-Za-z]\|[A-Za-z\s]+\|\d{2}-\d{2}-\d{4}$/;
+      if (!qrPattern.test(this.result)) {
+        await this.mostrarAlertaError('El QR escaneado no es el esperado.');
+        return;
+      }
+
       // Registrar asistencia
       this.fechaHoraRegistro = new Date().toLocaleString();
       console.log('Asistencia registrada:', this.fechaHoraRegistro);
+    // Actualizar la asistencia para el usuario
+      if (this.usuario) {
+        this.loginService.actualizarAsistencia(this.usuario.username, true);
+        console.log(`Asistencia actualizada para ${this.usuario.username}`);
+      }
+      // Logica si lo quiero hacer con la asignatura
+      //if (this.usuario) {
+      //  const asignatura = this.result.split('|')[0]; 
+      //  if (this.seleccionada === asignatura) {
+      //    this.loginService.actualizarAsistencia(this.usuario.username, true);
+      //    console.log(`Asistencia actualizada para ${this.usuario.username} en la asignatura ${asignatura}`);
+      //  } else {
+      //    await this.mostrarAlertaError('La asignatura del QR no coincide con la asignatura seleccionada.');
+      //  }
+      //}
     } catch (error) {
       console.error('Error al escanear el código QR:', error);
       this.mostrarAlertaError('Error al abrir el escáner, intenta de nuevo.');
     }
   }
 
-  // Cerrar sesión
+
+  // Cerrar sesion
   async cerrarSesion() {
     await this.loginService.cerrarSesion();
     this.router.navigate(['/login']);
@@ -110,8 +132,8 @@ export class HomeAlumnosPage implements OnInit {
         // Filtrar y ordenar los feriados que sean posteriores o iguales a la fecha actual
         this.feriados = feriados
         .filter((feriado: Feriado) => feriado.date >= today)
-        .sort((a: Feriado, b: Feriado) => (a.date > b.date ? 1 : -1)) // Ordenar por fecha
-        .slice(0, 5); // Limitar a los próximos 5 feriados
+        .sort((a: Feriado, b: Feriado) => (a.date > b.date ? 1 : -1)) 
+        .slice(0, 5); 
 
         console.log('Feriados obtenidos:', this.feriados);
       },

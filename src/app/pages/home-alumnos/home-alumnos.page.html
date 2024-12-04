@@ -33,7 +33,9 @@
 
     <ion-content class="content-asignaturas" fullscreen>
       <ion-list class="lisAsi">
-        <ion-item class="Asig-button" button (click)="elegirAsignatura('Matemáticas')">Matemáticas</ion-item>
+        <ion-item class="Asig-button" button (click)="elegirAsignatura('Matemáticas')"> 
+          <ion-icon name="calculator" slot="end"></ion-icon> Matemáticas
+        </ion-item>
         <ion-item class="Asig-button" button (click)="elegirAsignatura('Inglés')">Inglés</ion-item>
         <ion-item class="Asig-button" button (click)="elegirAsignatura('Lenguaje')">Lenguaje</ion-item>
         <ion-item class="Asig-button" button (click)="elegirAsignatura('Ciencias')">Ciencias</ion-item>

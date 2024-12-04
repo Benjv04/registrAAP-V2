@@ -39,9 +39,6 @@ export class LoginPage {
       this.showToastMessage('Login con éxito', 'primary');
 
       if (user.rol === 'alumno') {
-        user.presente = true; 
-        this.loginService.actualizarAsistencia(user.username, user.presente);
-        console.log(`Presencia de ${user.name}: ${user.presente ? 'Presente' : 'Ausente'}`);
         await this.router.navigate(['/home-alumnos'], { state: { username: user.username } });
       } //admin
       else if (user.rol === 'admin') {

@@ -29,6 +29,7 @@ export class HomeAlumnosPage implements OnInit {
   result: string = '';
   mostrarAsignatura: boolean = true;
   seleccionada: string | null = null;
+
   constructor(
     private router: Router,
     private apiService: ApiService,

@@ -144,8 +144,9 @@ export class AdminPage implements OnInit {
 
       this.feriados = this.feriados
         .filter((feriado: { date: string }) => {
-          const feriadoDate = new Date(feriado.date);
-          return feriadoDate >= today;
+          const feriadoDate = new Date(feriado.date).toISOString().split('T')[0];
+          const todayDate = today.toISOString().split('T')[0];
+          return feriadoDate >= todayDate; // Ahora incluye el día de hoy
         })
         .sort((a: { date: string }, b: { date: string }) => {
           return new Date(a.date).getTime() - new Date(b.date).getTime();
@@ -158,7 +159,7 @@ export class AdminPage implements OnInit {
     }
   }
 
-// Agregar un feriado personalizado
+  // Agregar un feriado personalizado
   async agregarFeriado() {
     const alert = await this.alertController.create({
       header: 'Agregar Feriado',
@@ -183,7 +184,6 @@ export class AdminPage implements OnInit {
           text: 'Guardar',
           handler: (data) => {
             const hoy = new Date().toISOString().split('T')[0];
-            console.log('Fecha ingresada:', data.date, 'Fecha de hoy:', hoy);
 
             if (!data.date || !data.title) {
               this.showToast('Por favor completa todos los campos', 'warning');
@@ -207,14 +207,13 @@ export class AdminPage implements OnInit {
     await alert.present();
   }
 
-
-
   // Eliminar un feriado personalizado
   async eliminarFeriado(date: string) {
     const formattedDate = new Date(date).toISOString().split('T')[0];
-    const apiHoliday = this.feriados.find(
-      (feriado) => feriado.date === formattedDate && !feriado.isCustom
-    );
+    const apiHoliday = this.feriados.find((feriado) => {
+      const feriadoFormattedDate = new Date(feriado.date).toISOString().split('T')[0];
+      return feriadoFormattedDate === formattedDate && !feriado.isCustom;
+    });
 
     if (apiHoliday) {
       this.showToast('No se puede eliminar un feriado oficial', 'danger');

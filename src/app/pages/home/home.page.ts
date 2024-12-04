@@ -10,12 +10,17 @@ import { Geolocation } from '@capacitor/geolocation';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
-  texto: string = ''; // Para el QR
-  alumnos: Usuario[] = []; // Lista de alumnos
-  latitud: number | null = null; // Para almacenar la latitud
-  longitud: number | null = null; // Para almacenar la longitud
 
-  // Variables para asignaturas y horarios
+  texto: string = '';
+  alumnos: Usuario[] = [];
+  alumnosFiltrados: Usuario[] = [];
+  cursos: string[] = ['A', 'B', 'C'];
+  mostrarAlumnos: boolean = false;
+  cursoSeleccionado: string = '';
+
+  latitud: number | null = null;
+  longitud: number | null = null;
+
   asignatura: string = '';
   seccion: string = 'A';
   sala: string = '';
@@ -26,7 +31,7 @@ export class HomePage implements OnInit {
     '10:00-12:00': 'Inglés',
     '12:00-14:00': 'Quimica',
     '14:00-16:00': 'Historia',
-    '16:00-18:00': 'Educacion fisica',
+    '16:00-22:00': 'Educacion fisica',
   };
 
   salas: { [key: string]: string } = {
@@ -45,24 +50,19 @@ export class HomePage implements OnInit {
       this.router.navigate(['/login']);
       return;
     }
-    this.alumnos = this.loginService.getAlumnos();
 
-    // Establecer fecha actual
-    this.fecha = new Date().toLocaleDateString();
+    this.alumnos = this.loginService.getAlumnos(); // Simulación o datos reales
+    this.fecha = new Date().toLocaleDateString(); // Fecha actual
   }
 
   generarQR() {
-    // Obtener la asignatura
     this.asignatura = this.obtenerAsignaturaActual();
     if (this.asignatura === '') {
       console.error('No hay una asignatura asignada para la hora actual');
       return;
     }
 
-    // Obtener la sala
     this.sala = this.obtenerSalaAsignatura(this.asignatura);
-
-    // Crear el texto con formato
     this.texto = `${this.asignatura}|${this.seccion}|${this.sala}|${this.fecha}`;
     console.log('QR generado:', this.texto);
   }
@@ -71,7 +71,6 @@ export class HomePage implements OnInit {
     const now = new Date();
     const currentHour = `${now.getHours()}:${now.getMinutes() < 10 ? '0' : ''}${now.getMinutes()}`;
 
-    // Buscar asignatura dependiendo de hora
     for (let rango in this.horario) {
       const [start, end] = rango.split('-');
       if (this.estaEnRango(currentHour, start, end)) {
@@ -109,5 +108,28 @@ export class HomePage implements OnInit {
     } catch (error) {
       console.error('Error obteniendo la geolocalización:', error);
     }
+  }
+
+  verAlumnos(curso: string) {
+    this.cursoSeleccionado = curso;
+
+    if (curso === 'A') {
+      this.alumnosFiltrados = this.alumnos.slice(0, Math.floor(this.alumnos.length / 3));
+    } else if (curso === 'B') {
+      this.alumnosFiltrados = this.alumnos.slice(
+        Math.floor(this.alumnos.length / 3),
+        Math.floor((this.alumnos.length * 2) / 3)
+      );
+    } else if (curso === 'C') {
+      this.alumnosFiltrados = this.alumnos.slice(Math.floor((this.alumnos.length * 2) / 3));
+    }
+
+    this.mostrarAlumnos = true;
+  }
+
+  volverCursos() {
+    this.mostrarAlumnos = false;
+    this.cursoSeleccionado = '';
+    this.alumnosFiltrados = [];
   }
 }

@@ -89,3 +89,11 @@ ion-icon{
   font-weight: bold;
 }
 
+.btnQr{
+  display: flex; /* Activar Flexbox */
+  justify-content: center; /* Centrar horizontalmente */
+  align-items: center; /* Centrar verticalmente (si es necesario) */
+  margin: 0 auto; /* Centrar el botón en el contenedor */
+  width: 60%; /* Controlar el ancho del botón */
+  text-align: center; /* Alinear el texto dentro del botón */
+}

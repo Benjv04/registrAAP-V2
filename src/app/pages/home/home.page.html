@@ -47,7 +47,9 @@
 
       <ion-list *ngIf="mostrarAlumnos">
         <ion-item>
-          <ion-button slot="start" (click)="volverCursos()">Volver</ion-button>
+          <ion-button slot="start" (click)="volverCursos()">
+            <ion-icon name="arrow-back" color="light"></ion-icon>Volver
+          </ion-button>
           <ion-label><strong>Alumnos del curso {{ cursoSeleccionado }}</strong></ion-label>
         </ion-item>
         <ion-item *ngFor="let alumno of alumnosFiltrados">

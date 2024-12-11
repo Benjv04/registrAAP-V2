@@ -1,18 +1,22 @@
+// Posiciona el encabezado de forma absoluta para mantenerlo fijo y sobrepuesto
 ion-header {
   position: absolute;
 }
 
+// Configura la barra de herramientas para que sea transparente y no visible
 ion-toolbar {
   --opacity: 0;
   --background: transparent;
 }
 
+// Ajusta el contenido para ocupar todo el alto y ancho de la pantalla
 ion-content {
   position: relative;
   height: 100%;
   width: 100%;
 }
 
+// Configura la imagen de fondo para que cubra completamente y sea responsiva
 ion-img {
   height: 100%;
   width: 100%;
@@ -20,80 +24,106 @@ ion-img {
   display: block;
 }
 
+// Estilo principal del contenedor de login
 .login {
   position: absolute;
-  top: 35%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border-radius: 20px;
-  max-width: 400px;
-  width: 80%;
-  padding: 30px; 
-  backdrop-filter: blur(10px);
-  background-color: rgba(0, 0, 0, 0.4);
-  box-shadow: 0 4px 10px rgba(8, 53, 83, 0.93);
-  border: 1px solid rgb(1, 87, 131);
-  display: flex;
-  flex-direction: column;
-  align-items: center; 
-  gap: 25px;
+  top: 42%; // Ubicación vertical, ajustada al centro superior de la pantalla
+  left: 50%; // Centrado horizontal
+  transform: translate(-50%, -50%); // Garantiza el centrado absoluto
+  border-radius: 20px; // Bordes redondeados para un diseño moderno
+  max-width: 400px; // Máximo ancho para mantenerlo responsivo
+  width: 90%; // Ajuste para pantallas más pequeñas
+  padding: 30px; // Espaciado interno para contenido
+  //backdrop-filter: blur(10px); // Fondo con efecto difuminado
+  background: linear-gradient(145deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)); // Gradiente oscuro como fondo
+  box-shadow: 0 4px 10px rgb(221, 43, 76); // Sombra para darle profundidad
+  border: 1px solid rgba(221, 43, 76, 0.434); // Borde semitransparente
+  display: flex; // Diseño flexible
+  flex-direction: column; // Elementos en columna
+  align-items: center; // Alineación centrada
+  gap: 20px; // Espaciado entre elementos
+  animation: fadeInUp 1.5s ease forwards; // Animación de entrada suave
 }
 
+// Estilos del título principal
 .titulo {
-  text-align: center;
-  color: white;
-  margin: 25px;
-  font-family:Arial, Helvetica, sans-serif;
-  font-weight: bold;
+  text-align: center; // Centra el texto
+  color: white; // Color blanco para contraste
+  font-size: 1.8rem; // Tamaño del texto grande
+  margin-bottom: 20px; // Separación inferior
+  font-family: "Poppins", Arial, sans-serif; // Tipografía moderna
+  font-weight: bold; // Texto en negrita
+  letter-spacing: 1px; // Espaciado entre letras para legibilidad
 }
 
-.links{
-  display:flex;
+// Estilo para los enlaces adicionales
+.links {
+  display: flex; // Alineación en columna
   flex-direction: column;
-  text-align: center;
-  gap: 15px;
-  color: white;
-  font-family:Arial, Helvetica, sans-serif;
+  text-align: center; // Texto centrado
+  gap: 10px; // Espaciado entre los enlaces
+  color: white; // Color blanco para contraste
+  font-family: "Poppins", Arial, sans-serif; // Tipografía consistente
+  font-size: 0.9rem; // Tamaño del texto más pequeño
 }
 
+// Estilos para los campos de entrada
 ion-input {
-  width: 100%;
-  background:white;
-  --padding-start: 15px;
-  border-radius: 10px;
-  height: 50px;
-  font-family:Arial, Helvetica, sans-serif;
-  --placeholder-color: rgb(0, 0, 0);
+  width: 100%; // Ocupa todo el ancho disponible
+  background: rgba(255, 255, 255, 0.079); // Fondo blanco semitransparente
+  --padding-start: 15px; // Espaciado interno izquierdo
+  border-radius: 8px; // Bordes redondeados
+  height: 50px; // Altura fija
+  font-family: "Poppins", Arial, sans-serif; // Tipografía consistente
+  --placeholder-color: rgba(0, 0, 0, 0.6); // Color del texto del placeholder
+  //box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2); // Sombra interna para profundidad
 }
 
+// Botón de login
 ion-button {
-  width: 60%;
-  --background:rgba(52, 51, 51, 0.929) ;
-  color: white;
-  font-family:Arial, Helvetica, sans-serif;
+  width: 60%; // Ancho del botón
+  //--background: linear-gradient(145deg, rgba(52, 51, 51, 0.9), rgba(1, 87, 131, 0.8)); // Fondo con gradiente
+  --background: rgba(221, 43, 75, 0.914);
+  color: white; // Texto en blanco
+  font-family: "Poppins", Arial, sans-serif; // Tipografía consistente
+  font-size: 1rem; // Tamaño del texto del botón
+  transition: transform 0.3s ease, background 0.3s ease; // Transición para hover
 }
 
-.recuperar{
-  color: white;
+// Efecto hover en el botón para resaltar al pasar el cursor
+ion-button:hover {
+  transform: scale(1.05); // Escala el botón ligeramente
+  --background: rgb(1, 131, 55); // Cambia el color de fondo
 }
 
-.login {
-  position: absolute;
-  top: 35%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  animation: fadeInUp 1.5s ease forwards;
+// Estilo para el enlace de recuperación de contraseña
+.recuperar {
+  color: white; // Color blanco
+  font-weight: bold; // Negrita para resaltar
+  text-decoration: underline; // Subrayado para indicar enlace
+  transition: color 0.3s ease; // Transición suave para hover
 }
 
+// Efecto hover en el enlace de recuperación
+.recuperar:hover {
+  color: rgba(0, 255, 255, 0.8); // Cambia a un color cian claro
+}
+
+.registrar{
+  color: white; // Color blanco
+  font-weight: bold; // Negrita para resaltar
+  text-decoration: underline; // Subrayado para indicar enlace
+  transition: color 0.3s ease; // Transición suave para hover
+}
+
+// Animación de entrada desde abajo
 @keyframes fadeInUp {
   0% {
-    opacity: 0;
-    transform: translate(-50%, 20%);
+    opacity: 0; // Comienza invisible
+    transform: translate(-50%, 20%); // Posición inicial desplazada
   }
   100% {
-    opacity: 1;
-    transform: translate(-50%, -50%);
+    opacity: 1; // Termina visible
+    transform: translate(-50%, -50%); // Centrado absoluto
   }
 }
-

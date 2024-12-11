@@ -1,7 +1,7 @@
 ion-toolbar{
     color: black;
     --background: transparent;
-    background-color: rgba(221, 188, 43, 0.914);
+    background-color: rgba(221, 43, 75, 0.914);
 }
 
 ion-icon{
@@ -12,3 +12,10 @@ ion-icon{
     border: 1.5px solid black;
     border-radius: 4px;
 }
+
+ion-input {
+    --border-radius: 10px;
+}
+
+
+  

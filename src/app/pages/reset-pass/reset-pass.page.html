@@ -1,4 +1,4 @@
-<ion-content [fullscreen]="true" class="ion-padding">
+<ion-content [fullscreen]="true" class="ion-padding"> 
   <div class="container">
     <div class="header">
       <h1 class="titulo">
@@ -11,19 +11,19 @@
     </div>
 
     <div class="input-container">
-      <!----verificar el usuario pa ver si esta-->
-      <ion-item class="input">
+      <!-- Verificar usuario -->
+      <ion-item class="input" *ngIf="!mostrarCodigo && !mostrarcontrasena">
         <ion-input [(ngModel)]="email" placeholder="Ingresa tu usuario"></ion-input>
         <ion-icon name="person-outline" slot="end"></ion-icon>
       </ion-item>
 
-      <!---Codigoverificacion-->
-      <ion-item *ngIf="mostrarCodigo" class="input">
+      <!-- Codigo de verificación -->
+      <ion-item class="input" *ngIf="mostrarCodigo">
         <ion-input [(ngModel)]="codigo" placeholder="Ingresa el código de verificación"></ion-input>
         <ion-icon name="key-outline" slot="end"></ion-icon>
       </ion-item>
 
-      <!----cambio contraseñaaa-->
+      <!-- Cambiar contraseña -->
       <ng-container *ngIf="mostrarcontrasena">
         <ion-item class="input">
           <ion-input [(ngModel)]="password" type="password" placeholder="Nueva contraseña"></ion-input>
@@ -35,14 +35,21 @@
         </ion-item>
       </ng-container>
 
-      <!-------boton-->
+      <br>
+
+      <!-- Boton -->
       <div class="boton">
-        <ion-button (click)="mostrarcontrasena ? confirmarRestablecimiento() : mostrarCodigo ? verificarCodigo() : verificacion()">
+        <ion-button 
+          (click)="mostrarcontrasena ? confirmarRestablecimiento() : mostrarCodigo ? verificarCodigo() : verificacion()" 
+          color="danger">
+          <ion-icon name="log-in-outline" slot="end"></ion-icon>
           {{ mostrarcontrasena ? 'Restablecer contraseña' : 'Continuar' }}
         </ion-button>
       </div>
     </div>       
   </div>
+
+  <!-- Enlace para volver al login -->
   <div class="volver-login">
     <a routerLink="/login" style="color: black;">Volver al login</a>
   </div>

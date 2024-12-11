@@ -33,11 +33,27 @@
 
     <ion-content class="content-asignaturas" fullscreen>
       <ion-list class="lisAsi">
-        <ion-item class="Asig-button" button (click)="elegirAsignatura('Matemáticas')">Matemáticas</ion-item>
-        <ion-item class="Asig-button" button (click)="elegirAsignatura('Inglés')">Inglés</ion-item>
-        <ion-item class="Asig-button" button (click)="elegirAsignatura('Lenguaje')">Lenguaje</ion-item>
-        <ion-item class="Asig-button" button (click)="elegirAsignatura('Ciencias')">Ciencias</ion-item>
-        <ion-item class="Asig-button" button (click)="elegirAsignatura('Historia')">Historia</ion-item>
+
+        <ion-item class="Asig-button" button (click)="elegirAsignatura('Matemáticas')"> 
+          <ion-icon name="calculator" slot="end"></ion-icon> Matemáticas
+        </ion-item>
+
+        <ion-item class="Asig-button" button (click)="elegirAsignatura('Inglés')">
+          <ion-icon name="book" slot="end"></ion-icon>Inglés
+        </ion-item>
+
+        <ion-item class="Asig-button" button (click)="elegirAsignatura('Lenguaje')">
+          <ion-icon name="chatbubbles" slot="end"></ion-icon>Lenguaje
+        </ion-item>
+
+        <ion-item class="Asig-button" button (click)="elegirAsignatura('Ciencias')">
+          <ion-icon name="flask" slot="end"></ion-icon>Ciencias
+        </ion-item>
+
+        <ion-item class="Asig-button" button (click)="elegirAsignatura('Historia')">
+          <ion-icon name="bonfire" slot="end"></ion-icon>Historia
+        </ion-item>
+
       </ion-list>
     </ion-content>
   </div>
@@ -73,7 +89,9 @@
       
       <br>
 
-      <ion-button expand="block" color="dark" (click)="scan()">Escanear QR para Asistencia</ion-button>
+      <ion-button expand="block" color="dark"  (click)="scan()">
+        <ion-icon name="expand" slot="end" color="light" ></ion-icon> Escanear QR para Asistencia
+      </ion-button>
 
       <div *ngIf="fechaHoraRegistro" class="asisRegist">
         <ion-text color="dark">

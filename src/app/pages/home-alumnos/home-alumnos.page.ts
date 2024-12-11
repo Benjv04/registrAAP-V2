@@ -85,12 +85,12 @@ export class HomeAlumnosPage implements OnInit {
       this.result = barcodes.join(', ');
       console.log('Resultado del escaneo:', this.result);
 
-      // Validar el formato QR 
-      const qrPattern = /^[A-Za-z\s]+?\|[A-Za-z]\|[A-Za-z\s]+\|\d{2}-\d{2}-\d{4}$/;
+      // Validar el formato  
+      const qrPattern = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+?\|[A-Za-z0-9]+\|[A-Za-z0-9\s]+\|\d{2}-\d{2}-\d{4}$/;
       if (!qrPattern.test(this.result)) {
         await this.mostrarAlertaError('El QR escaneado no es el esperado.');
         return;
-      }
+      }  
 
       // Registrar asistencia
       this.fechaHoraRegistro = new Date().toLocaleString();
@@ -119,8 +119,30 @@ export class HomeAlumnosPage implements OnInit {
 
   // Cerrar sesion
   async cerrarSesion() {
-    await this.loginService.cerrarSesion();
-    this.router.navigate(['/login']);
+    const alert = await this.alertController.create({
+      header: 'Confirmación de cierre',
+      message: '⚠️¿Estás seguro de que deseas cerrar sesión?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'cancel-button',
+          handler: () => {
+            console.log('Cierre de sesión cancelado');
+          },
+        },
+        {
+          text: 'Cerrar Sesión',
+          cssClass: 'logout-button',
+          handler: async () => {
+            await this.loginService.cerrarSesion();
+            this.router.navigate(['/login']);
+          },
+        },
+      ],
+    });
+  
+    await alert.present();
   }
 
   // Obtener feriados desde el servicio

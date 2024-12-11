@@ -79,8 +79,30 @@ export class AdminPage implements OnInit {
 
   // Cerrar sesión
   async cerrarSesion() {
-    await this.loginService.cerrarSesion();
-    this.router.navigate(['/login']);
+    const alert = await this.alertController.create({
+      header: 'Confirmación de cierre',
+      message: '⚠️¿Estás seguro de que deseas cerrar sesión?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'cancel-button',
+          handler: () => {
+            console.log('Cierre de sesión cancelado');
+          },
+        },
+        {
+          text: 'Cerrar Sesión',
+          cssClass: 'logout-button',
+          handler: async () => {
+            await this.loginService.cerrarSesion();
+            this.router.navigate(['/login']);
+          },
+        },
+      ],
+    });
+  
+    await alert.present();
   }
 
   // Confirmar restablecer usuarios

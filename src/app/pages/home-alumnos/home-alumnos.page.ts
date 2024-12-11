@@ -85,12 +85,12 @@ export class HomeAlumnosPage implements OnInit {
       this.result = barcodes.join(', ');
       console.log('Resultado del escaneo:', this.result);
 
-      // Validar el formato QR 
-      const qrPattern = /^[A-Za-z\s]+?\|[A-Za-z]\|[A-Za-z\s]+\|\d{2}-\d{2}-\d{4}$/;
+      // Validar el formato  
+      const qrPattern = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+?\|[A-Za-z0-9]+\|[A-Za-z0-9\s]+\|\d{2}-\d{2}-\d{4}$/;
       if (!qrPattern.test(this.result)) {
         await this.mostrarAlertaError('El QR escaneado no es el esperado.');
         return;
-      }
+      }  
 
       // Registrar asistencia
       this.fechaHoraRegistro = new Date().toLocaleString();

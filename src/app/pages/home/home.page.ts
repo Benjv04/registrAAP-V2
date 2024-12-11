@@ -51,8 +51,8 @@ export class HomePage implements OnInit {
       return;
     }
 
-    this.alumnos = this.loginService.getAlumnos(); // Simulación o datos reales
-    this.fecha = new Date().toLocaleDateString(); // Fecha actual
+    this.alumnos = this.loginService.getAlumnos();
+    this.fecha = new Date().toLocaleDateString(); 
   }
 
   generarQR() {

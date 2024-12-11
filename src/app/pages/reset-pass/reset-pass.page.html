@@ -17,7 +17,7 @@
         <ion-icon name="person-outline" slot="end"></ion-icon>
       </ion-item>
 
-      <!-- Código de verificación -->
+      <!-- Codigo de verificación -->
       <ion-item class="input" *ngIf="mostrarCodigo">
         <ion-input [(ngModel)]="codigo" placeholder="Ingresa el código de verificación"></ion-input>
         <ion-icon name="key-outline" slot="end"></ion-icon>
@@ -37,7 +37,7 @@
 
       <br>
 
-      <!-- Botón -->
+      <!-- Boton -->
       <div class="boton">
         <ion-button 
           (click)="mostrarcontrasena ? confirmarRestablecimiento() : mostrarCodigo ? verificarCodigo() : verificacion()" 

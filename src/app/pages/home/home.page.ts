@@ -43,6 +43,14 @@ export class HomePage implements OnInit {
     'Educacion fisica': 'Patio',
   };
 
+  asignaturasCodigos: { [key: string]: string } = {
+    'Matematicas': 'MAT521',
+    'Inglés': 'ING662',
+    'Quimica': 'QUI943',
+    'Historia': 'HIS433',
+    'Educacion fisica': 'EDF115',
+  };
+
   constructor(private router: Router,
     private alertController: AlertController, 
     private loginService: LoginService) {}
@@ -58,15 +66,31 @@ export class HomePage implements OnInit {
     this.fecha = new Date().toLocaleDateString(); 
   }
 
-  generarQR() {
-    this.asignatura = this.obtenerAsignaturaActual();
-    if (this.asignatura === '') {
+  async generarQR() {
+    // Obtener la asignatura 
+    const asignaturaNombre = this.obtenerAsignaturaActual();
+    if (!asignaturaNombre) {
       console.error('No hay una asignatura asignada para la hora actual');
+      await this.mostrarAlertaError('No hay una asignatura asignada para la hora actual');
       return;
     }
-
-    this.sala = this.obtenerSalaAsignatura(this.asignatura);
-    this.texto = `${this.asignatura}|${this.seccion}|${this.sala}|${this.fecha}`;
+  
+    // Obtener el cod asignatura
+    const codigoAsignatura = this.asignaturasCodigos[asignaturaNombre];
+    if (!codigoAsignatura) {
+      console.error(`Codigo no encontrado para la asignatura: ${asignaturaNombre}`);
+      return;
+    }
+  
+    // Obtener la sala 
+    this.sala = this.obtenerSalaAsignatura(asignaturaNombre);
+  
+    // fecha con el formato (YYYYMMDD)
+    const now = new Date();
+    this.fecha = `${now.getFullYear()}${(now.getMonth() + 1).toString().padStart(2, '0')}${now.getDate().toString().padStart(2, '0')}`;
+  
+    // Crear el texto QR con el nuevo formato
+    this.texto = `${codigoAsignatura}|${this.seccion}|${this.sala}|${this.fecha}`;
     console.log('QR generado:', this.texto);
   }
 
@@ -156,5 +180,15 @@ export class HomePage implements OnInit {
     this.mostrarAlumnos = false;
     this.cursoSeleccionado = '';
     this.alumnosFiltrados = [];
+  }
+
+  async mostrarAlertaError(message: string) {
+    const alert = await this.alertController.create({
+      header: 'Error',
+      message: message,
+      buttons: ['OK'],
+    });
+  
+    await alert.present();
   }
 }

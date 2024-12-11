@@ -74,28 +74,41 @@ export class HomeAlumnosPage implements OnInit {
       // Validar si es feriado
       const today = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD
       const esFeriado = this.feriados.some((feriado) => feriado.date === today);
-
+  
       if (esFeriado) {
-        await this.mostrarAlertaError('Hoy es un día feriado, no se puede registrar asistencia.');
+        await this.mostrarAlertaError('Hoy es un dia feriado, no se puede registrar asistencia.');
         return;
       }
-
+  
       // Escanear QR
       const barcodes = await this.qrScannerService.scan();
       this.result = barcodes.join(', ');
       console.log('Resultado del escaneo:', this.result);
-
-      // Validar el formato  
-      const qrPattern = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+?\|[A-Za-z0-9]+\|[A-Za-z0-9\s]+\|\d{2}-\d{2}-\d{4}$/;
+  
+      // Validar el formato(cod de asignatura|seccion|sala|fecha)
+      const qrPattern = /^[A-Z]{3}\d{3}\|[A-Z0-9]+\|[A-Za-z0-9]+\|\d{8}$/;
       if (!qrPattern.test(this.result)) {
-        await this.mostrarAlertaError('El QR escaneado no es el esperado.');
+        await this.mostrarAlertaError('El QR escaneado no cumple con el formato esperado.');
         return;
-      }  
-
+      }
+  
+      // mostrar datos del QR por consola
+      const [asignatura, seccion, sala, fecha] = this.result.split('|');
+      console.log(`Asignatura: ${asignatura}, Sección: ${seccion}, Sala: ${sala}, Fecha: ${fecha}`);
+  
+      // Verifica si fecha del QR es valida con el formato 
+      const fechaQR = `${fecha.substring(0, 4)}-${fecha.substring(4, 6)}-${fecha.substring(6, 8)}`;
+      const fechaHoy = new Date().toISOString().split('T')[0];
+      if (fechaQR !== fechaHoy) {
+        await this.mostrarAlertaError('La fecha no coincide con la fecha actual.');
+        return;
+      }
+  
       // Registrar asistencia
       this.fechaHoraRegistro = new Date().toLocaleString();
       console.log('Asistencia registrada:', this.fechaHoraRegistro);
-    // Actualizar la asistencia para el usuario
+  
+      // Actualizar la asistencia para el usuario
       if (this.usuario) {
         this.loginService.actualizarAsistencia(this.usuario.username, true);
         console.log(`Asistencia actualizada para ${this.usuario.username}`);
@@ -111,8 +124,8 @@ export class HomeAlumnosPage implements OnInit {
       //  }
       //}
     } catch (error) {
-      console.error('Error al escanear el código QR:', error);
-      this.mostrarAlertaError('Error al abrir el escáner, intenta de nuevo.');
+      console.error('Error al escanear el codigo QR:', error);
+      this.mostrarAlertaError('Error al abrir el escaner, intenta de nuevo.');
     }
   }
 

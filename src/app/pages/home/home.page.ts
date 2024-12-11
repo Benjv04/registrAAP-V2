@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { LoginService } from '../../services/login.service';
 import { Usuario } from '../../models/usuario';
 import { Geolocation } from '@capacitor/geolocation';
+import { AlertController, ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -42,7 +43,9 @@ export class HomePage implements OnInit {
     'Educacion fisica': 'Patio',
   };
 
-  constructor(private router: Router, private loginService: LoginService) {}
+  constructor(private router: Router,
+    private alertController: AlertController, 
+    private loginService: LoginService) {}
 
   async ngOnInit() {
     const isAuthenticated = await this.loginService.estaAutenticado();
@@ -89,8 +92,30 @@ export class HomePage implements OnInit {
   }
 
   async cerrarSesion() {
-    await this.loginService.cerrarSesion();
-    this.router.navigate(['/login']);
+    const alert = await this.alertController.create({
+      header: 'Confirmación de cierre',
+      message: '⚠️¿Estás seguro de que deseas cerrar sesión?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'cancel-button',
+          handler: () => {
+            console.log('Cierre de sesión cancelado');
+          },
+        },
+        {
+          text: 'Cerrar Sesión',
+          cssClass: 'logout-button',
+          handler: async () => {
+            await this.loginService.cerrarSesion();
+            this.router.navigate(['/login']);
+          },
+        },
+      ],
+    });
+  
+    await alert.present();
   }
 
   cambiarPresencia(alumno: Usuario) {

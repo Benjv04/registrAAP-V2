@@ -66,18 +66,19 @@ export class HomePage implements OnInit {
     this.fecha = new Date().toLocaleDateString(); 
   }
 
-  generarQR() {
+  async generarQR() {
     // Obtener la asignatura 
     const asignaturaNombre = this.obtenerAsignaturaActual();
     if (!asignaturaNombre) {
       console.error('No hay una asignatura asignada para la hora actual');
+      await this.mostrarAlertaError('No hay una asignatura asignada para la hora actual');
       return;
     }
   
     // Obtener el cod asignatura
     const codigoAsignatura = this.asignaturasCodigos[asignaturaNombre];
     if (!codigoAsignatura) {
-      console.error(`Código no encontrado para la asignatura: ${asignaturaNombre}`);
+      console.error(`Codigo no encontrado para la asignatura: ${asignaturaNombre}`);
       return;
     }
   
@@ -179,5 +180,15 @@ export class HomePage implements OnInit {
     this.mostrarAlumnos = false;
     this.cursoSeleccionado = '';
     this.alumnosFiltrados = [];
+  }
+
+  async mostrarAlertaError(message: string) {
+    const alert = await this.alertController.create({
+      header: 'Error',
+      message: message,
+      buttons: ['OK'],
+    });
+  
+    await alert.present();
   }
 }
